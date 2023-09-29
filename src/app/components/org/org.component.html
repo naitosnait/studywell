@@ -1,0 +1,93 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="card">
+        <div class="header">
+          <h4 class="title">Table with Links</h4>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>orgname</th>
+                <th>shotname</th>
+                <th>description</th>
+                <th>INN</th>
+                <th>OGRN</th>
+                <th>address</th>
+                <th>factaddress</th>
+                <th>replies</th>
+                <th>page_ids</th>
+                <th>ambassadors</th>
+                <th>photo</th>
+                <th>tel</th>
+                <th>email</th>
+                <th>created_at</th>
+                <th>updated_at</th>
+                <th>page actions</th>
+                <th>orgs actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let org of orgs | paginate: { itemsPerPage: size, currentPage: page }">
+                <td class="text-center">{{ org.orgname }}</td>
+                <td>{{ org.shotname}}</td>
+                <td>
+                  <span (click)="onClickShow()" class="show">Show</span>
+                  <div class="description" *ngIf="showDescription">
+                    <span>{{ org.description}}</span>
+                  </div>
+                </td>
+                <td>{{ org.INN}}</td>
+                <td>{{ org.OGRN}}</td>
+                <td>{{ org.address}}</td>
+                <td>{{ org.factaddress}}</td>
+                <td><p *ngFor="let r of org.replies">{{ r }}</p></td>
+                <td><a *ngFor="let p of org.page_ids"
+                    [routerLink]="['/pages/page', p]">
+                    {{ p }}
+                  </a></td>
+                <td>
+                  <p *ngFor="let amb of org.ambassadors">
+                    {{amb.name + ' ' + amb.surname}}</p>
+                </td>
+                <td>{{ org.photo}}</td>
+                <td>{{ org.tel}}</td>
+                <td>{{ org.email}}</td>
+                <td>{{ org.created_at | date:'dd.MM.yyyy'}}<br />{{
+                  org.created_at | date:'HH:mm'}}</td>
+                <td>{{ org.updated_at | date:'dd.MM.yyyy'}}<br />{{
+                  org.updated_at | date:'HH:mm'}}</td>
+                <td>
+                  <a rel="tooltip" title="Set page"
+                    class="btn btn-success btn-simple btn-xs"
+                    (click)="setPage()">
+                    <i class="fa fa-plus"></i>
+                  </a>
+                  <a rel="tooltip" title="Remove page"
+                    class="btn btn-danger btn-simple btn-xs">
+                    <i class="fa fa-minus"></i>
+                  </a>
+                </td>
+                <td class="text-center">
+                  <label class="toggle-switch">
+                    <input type="checkbox" [(ngModel)]="org.org_activate">
+                    <div class="slider"></div>
+                  </label>
+                  <a rel="tooltip" title="Delete orgs"
+                    class="btn btn-danger btn-simple btn-xs">
+                    <i class="fa fa-remove"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <pagination-controls class="paging" (pageChange)="page = $event"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

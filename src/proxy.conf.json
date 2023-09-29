@@ -1,0 +1,6 @@
+{
+  "/admin/*": {
+    "target": "https://b9e48c06433b.vps.myjino.ru",
+    "secure": false
+  }
+}

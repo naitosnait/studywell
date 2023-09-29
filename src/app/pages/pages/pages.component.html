@@ -1,0 +1,45 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="header">
+            <h4 class="title">Educational institutions</h4>
+          </div>
+          <div class="content">
+            <div class="row">
+              <div class="col">
+                <input type="text" [(ngModel)]="searchTxt" class="form-control"
+                  name="searchTxt"
+                  placeholder="Search name (please enter 3 or more characters)">
+              </div>
+              <div class="col">
+                <button type="button" class="btn btn-info btn-fill"
+                  (click)="search()">Search</button>
+              </div>
+            </div>
+            <div class="content">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"
+                  *ngFor="let item of pages | async | paginate: { itemsPerPage: size, currentPage: page, totalItems: totalItems }">
+                  <a [routerLink]="['/pages/page', item.id]">
+                    {{ item.name }}
+                  </a>
+                </li>
+              </ul>
+
+              <div *ngIf="showPaging" class="row">
+                <div class="col">
+                  <pagination-controls (pageChange)="getPage($event)"></pagination-controls>
+                </div>
+                <div class="col">
+                  <!-- элементво на странице -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,228 @@
+<div class="container-fluid emp-profile" *ngIf="page">
+  <form method="post">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="profile-head">
+          <h3>
+            {{page.name}}
+          </h3>
+          <ngb-rating [(rate)]="page.rating" [readonly]="true" max="5">
+          </ngb-rating>
+          <!-- <h5>
+            <a href="{{page.base_url}}">{{page.base_url}}</a>
+          </h5> -->
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button type="button" class="profile-edit-btn" name="btnAddMore"
+          (click)="editPage()">Edit Page</button>
+      </div>
+    </div>
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+      <li [ngbNavItem]="1">
+        <button ngbNavLink>About</button>
+        <ng-template ngbNavContent>
+          <div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>Org type</label>
+              </div>
+              <div class="col-md-6">
+                <p class="description">{{page.orgtypes[0]?.name}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>Study type</label>
+              </div>
+              <div class="col-md-6">
+                <p class="description">{{page.studytypes[0]?.name}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>founded</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{page.founded}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>description</label>
+              </div>
+              <div class="col-md-6">
+                <p class="description">{{page.description}}</p>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+        <button ngbNavLink>Contact</button>
+        <ng-template ngbNavContent>
+          <div>
+            <!-- <div class="row">
+              <div class="col-md-4">
+                <label>country</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{page.country.name}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>city</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{page.city.name}}</p>
+              </div>
+            </div> -->
+            <div class="row">
+              <div class="col-md-4">
+                <label>address</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{page.address}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>site</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{page.contacts.site}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>email</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{page.contacts.email}}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <label>tel</label>
+              </div>
+              <div class="col-md-6">
+                <p>{{page.contacts.tel}}</p>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="3">
+        <button ngbNavLink>Programs</button>
+        <ng-template ngbNavContent>
+          <div>
+            <div *ngFor="let p of page?.programs; let i=index">
+              <div class="row">
+                <div class="col-md-12">
+                  <h3>{{p.name}} <b class="caret"></b></h3>
+                  <div class="row">
+                    <div class="col-md-1">
+                      <label>living</label>
+                    </div>
+                    <div class="col-md-2">
+                      <p>{{p.living?.name}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-1">
+                      <label>period</label>
+                    </div>
+                    <div class="col-md-1">
+                      <p>{{p.period}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-1">
+                      <label>price</label>
+                    </div>
+                    <div class="col-md-1">
+                      <!-- <p>{{p.price.original_price}}</p>
+                        <p>{{p.price.original_currency}}</p>
+                        <p>{{p.price.currency}}</p>
+                        <p>{{p.price.calc_price}}</p>
+                        <p>{{p.price.calc_currency}}</p>
+                        <p>{{p.price.currency_c}}</p> -->
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-1">
+                      <label>date</label>
+                    </div>
+                    <div class="col-md-3" *ngFor="let d of p.date">
+                      <p>{{d?.startdate | date :'dd.MM.yyyy'}} - {{d?.enddate |
+                        date :'dd.MM.yyyy'}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-1">
+                      <label>age</label>
+                    </div>
+                    <div class="col-md-1">
+                      <p>{{convertAge(p.age)}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="4">
+        <button ngbNavLink>Languges</button>
+        <ng-template ngbNavContent>
+          <div>
+            <div class="row">
+              <div class="col-md-6">
+                <span *ngFor="let l of page.language">
+                  <span>{{l.name}}</span>
+                  &nbsp;
+                </span>
+                <br />
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="5">
+        <button ngbNavLink>Subjects</button>
+        <ng-template ngbNavContent>
+          <div>
+            <div class="row">
+              <div class="col-md-6">
+                <span *ngFor="let l of page.subjects">
+                  <span>{{l.name}}</span>
+                  &nbsp;
+                </span>
+                <br />
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="6">
+        <button ngbNavLink>Events</button>
+        <ng-template ngbNavContent>
+          <div>
+            <div class="row">
+              <div class="col-md-6">
+                <span *ngFor="let l of page.events">
+                  <span>{{l.name}}</span>
+                  &nbsp;
+                </span>
+                <br />
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+  </form>
+</div>

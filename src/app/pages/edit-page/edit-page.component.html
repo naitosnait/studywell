@@ -1,0 +1,230 @@
+<div class="main-content" *ngIf="page">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="header">
+            <h4 class="title">Edit page</h4>
+          </div>
+          <div class="content">
+            <!-- <form> -->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Name</label>
+                  <input type="text" class="form-control" placeholder="name"
+                    [(ngModel)]="page.name">
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>founded</label>
+                  <input type="text" class="form-control"
+                    placeholder="founded"
+                    [(ngModel)]="page.founded">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>site</label>
+                  <input type="text" class="form-control" placeholder="site"
+                    [(ngModel)]="page.contacts.site">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>email</label>
+                  <input type="text" class="form-control" placeholder="email"
+                    [(ngModel)]="page.contacts.email">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label>tel</label>
+                  <input type="text" class="form-control" placeholder="tel"
+                    [(ngModel)]="page.contacts.tel">
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Country</label>
+                    <select name="select" class="form-control" (change)="onChangeCountry($event)">
+                      <option *ngFor="let c of countries" [value]="c.id">{{c.name}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>City</label>
+                    <select name="select" class="form-control" (change)="onChangeCity($event)">
+                      <option *ngFor="let c of cities" [value]="c.id">{{c.name}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div> -->
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Address</label>
+                  <input type="text" class="form-control"
+                    placeholder="address" [(ngModel)]="page.address">
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>Base url</label>
+                    <input type="text" class="form-control" placeholder="base_url" [(ngModel)]="base_url">
+                  </div>
+                </div>
+              </div> -->
+
+            <!-- <div class="row">
+                <label class="common-label">Location (coordinates)</label>
+                <div class="form-group">
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" placeholder="coordinate1" [(ngModel)]="coordinate1">
+                  </div>
+                  <div class="col-md-6">
+                    <input type="text" class="form-control" placeholder="coordinate2" [(ngModel)]="coordinate2">
+                  </div>
+                </div>
+              </div> -->
+
+            <!-- <br /> -->
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>org type</label>
+                  <select name="select" class="form-select" (change)="onChangeOrgType($event)">
+                    <option *ngFor="let c of orgtypes" [value]="c.id">{{c.name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>study type</label>
+                  <select name="select" class="form-select" (change)="onChangeStudyType($event)">
+                    <option *ngFor="let c of studytypes" [value]="c.id">{{c.name}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Languages</label>
+                  <ng-select [items]="languages$ | async"
+                    bindLabel="name"
+                    [addTag]="true"
+                    [multiple]="true"
+                    [hideSelected]="true"
+                    [trackByFn]="trackByFn"
+                    [minTermLength]="3"
+                    [loading]="languagesLoading"
+                    placeholder="Select languages"
+                    typeToSearchText="Please enter 3 or more characters"
+                    [typeahead]="languageInput$"
+                    [(ngModel)]="selectedLanguages">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Subjects</label>
+                  <ng-select [items]="subjects$ | async"
+                    bindLabel="name"
+                    [addTag]="true"
+                    [multiple]="true"
+                    [hideSelected]="true"
+                    [trackByFn]="trackByFn"
+                    [minTermLength]="3"
+                    [loading]="subjectsLoading"
+                    placeholder="Select subjects"
+                    typeToSearchText="Please enter 3 or more characters"
+                    [typeahead]="subjectInput$"
+                    [(ngModel)]="selectedSubjects">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Events</label>
+                  <ng-select [items]="events$ | async"
+                    bindLabel="name"
+                    [addTag]="true"
+                    [multiple]="true"
+                    [hideSelected]="true"
+                    [trackByFn]="trackByFn"
+                    [minTermLength]="3"
+                    [loading]="eventsLoading"
+                    placeholder="Select events"
+                    typeToSearchText="Please enter 3 or more characters"
+                    [typeahead]="eventInput$"
+                    [(ngModel)]="selectedEvents">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Program types</label>
+                  <ng-select [items]="programTypes$ | async"
+                    bindLabel="name"
+                    [addTag]="true"
+                    [multiple]="true"
+                    [hideSelected]="true"
+                    [trackByFn]="trackByFn"
+                    [minTermLength]="3"
+                    [loading]="programTypesLoading"
+                    placeholder="Select programTypes"
+                    typeToSearchText="Please enter 3 or more characters"
+                    [typeahead]="programTypeInput$"
+                    [(ngModel)]="selectedProgramTypes">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>description</label>
+                  <textarea rows="5" class="form-control"
+                    placeholder="Here can be your description"
+                    [(ngModel)]="page.description">bla bla</textarea>
+                </div>
+              </div>
+            </div>
+            <br />
+
+            <button type="button" class="btn btn-info btn-fill pull-right" (click)="editPage()">
+              Edit
+            </button>
+            <div class="clearfix"></div>
+            <!-- </form> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

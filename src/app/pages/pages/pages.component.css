@@ -1,0 +1,3 @@
+.paging ::ng-deep .ngx-pagination {
+  padding-inline-start: 0;
+}

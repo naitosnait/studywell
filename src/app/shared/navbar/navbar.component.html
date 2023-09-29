@@ -1,0 +1,89 @@
+<nav #navbar class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand">#TODO</a>
+    </div>
+    <div class="navbar-collapse">
+      <ul class="nav navbar-nav">
+        <li>
+          <a [routerLink]="['/components/orgs']">
+            <p class>
+              Orgs
+            </p>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/pages/create']">
+            <p class>
+              Create page
+            </p>
+          </a>
+        </li>
+        <li>
+          <a [routerLink]="['/pages/all']">
+            <p class>
+              Pages
+            </p>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="text-danger"
+            (click)="logout()">
+            <i class="pe-7s-close-circle"></i>
+            Log out
+          </a>
+        </li>
+
+        <!-- <li class="dropdown dropdown-with-icons">
+          <a href="#" class="dropdown-toggle"
+            data-toggle="dropdown">
+            <p class>
+              Pages
+              <b class="caret"></b>
+            </p>
+          </a>
+          <ul class="dropdown-menu dropdown-with-icons">
+            <li>
+              <li>
+                <a href="#" class="text-danger">
+                  <i class="pe-7s-close-circle"></i>
+                  Show all
+                </a>
+                <a [routerLink]="['/pages/create']" class="text-danger">
+                  <i class="pe-7s-close-circle"></i>
+                  Create
+                </a>
+              </li>
+            </ul>
+          </li>-->
+      </ul>
+
+      <!-- <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown dropdown-with-icons">
+          <a href="#" class="dropdown-toggle"
+            data-toggle="dropdown">
+            <i class="fa fa-list"></i>
+            <p class="hidden-md hidden-lg">
+              More
+              <b class="caret"></b>
+            </p>
+          </a>
+          <ul class="dropdown-menu dropdown-with-icons">
+            <li>
+              <li>
+                <a href="#" class="text-danger">
+                  <i class="pe-7s-close-circle"></i>
+                  My profile
+                </a>
+                <a href="#" class="text-danger"
+                  (click)="logout()">
+                  <i class="pe-7s-close-circle"></i>
+                  Log out
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul> -->
+    </div>
+  </div>
+</nav>
