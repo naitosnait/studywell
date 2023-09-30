@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 
 import { Observable } from 'rxjs-compat';
 import { RestService } from './rest.service';
-import { Catalog, CountItem, Query } from 'app/models/page';
+import { Catalog, CountItem, Currency, Query } from 'app/models/page';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,12 @@ export class CatalogService {
   constructor(private rest: RestService) { }
 
   public catalog(page: number, size: number, search?: string): Observable<Catalog<CountItem>[]> {
-    var url = `/catalog/?page=${page}&size=${size}&search=${search}`;
+    var url: string;
+    if (typeof search != 'undefined' && search) {
+      url = `/catalog/?page=${page}&size=${size}&search=${search}`;
+    } else {
+      url = `/catalog/?page=${page}&size=${size}`;
+    }
     return this.rest.get<Catalog<CountItem>[]>(url);
   }
 
@@ -79,6 +84,22 @@ export class CatalogService {
       return this.rest.get<Query[]>(url).pipe(map(res => this.reduceQueryToItem(res)));
     }
     var url = "/catalog/programtype/";
+    return this.rest.get<Catalog<CountItem>[]>(url).pipe(map((c: Catalog<CountItem>[]) => {
+      var items = c[0].items;
+      return items;
+    }));
+  }
+
+  public getCurrencies(): Observable<Currency[]> {
+    var url = `/currency/?f_page=1&f_size=13`;
+    return this.rest.get<Catalog<Currency>[]>(url).pipe(map((c: Catalog<Currency>[]) => {
+      var items = c[0].items;
+      return items;
+    }));
+  }
+
+  public getLivingForms(): Observable<CountItem[]> {
+    var url = `/catalog/livingform/?f_page=1&f_size=10`;
     return this.rest.get<Catalog<CountItem>[]>(url).pipe(map((c: Catalog<CountItem>[]) => {
       var items = c[0].items;
       return items;

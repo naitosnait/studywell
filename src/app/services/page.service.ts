@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { RestService } from "app/services/rest.service";
-import { Page } from "../models/page";
+import { Page, Price } from "../models/page";
 import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { PageResponse } from "app/models/response";
@@ -32,5 +32,15 @@ export class PageService {
         console.info(res.page.id);
         return res.page.id;
       }));
+  }
+
+  public deletePage(page: Page): Observable<string> {
+    var url = `/admin/page/delete?id=${page.id}`;
+    return this.restService.delete<string>(url);
+  }
+
+  public calcPrice(original_price: number, original_currency: string, currency: number): Observable<Price> {
+    var url = `/currency/calc?original_price=${original_price}&original_currency=${original_currency}&currency=${currency}`;
+    return this.restService.get<Price>(url);
   }
 }

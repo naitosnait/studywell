@@ -106,3 +106,21 @@ export interface Catalog<T> {
   size: number;
   total_pages: number;
 }
+
+export interface Currency {
+  original_currency: string
+  currency: number
+  count: number
+}
+
+export interface NewProgram {
+  dateFrom: string;
+  dateTo: string;
+  ageFrom: number;
+  ageTo: number;
+  price: string;
+  currency: Currency;
+  calcprice: any;
+  living: Item;
+  period: string;
+}

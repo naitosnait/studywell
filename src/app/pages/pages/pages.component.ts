@@ -21,18 +21,19 @@ export class PagesComponent {
 
   public pages: Observable<CountItem[]>
 
-  constructor(private searchService: SearchService, private catalogService: CatalogService) { }
+  constructor(private searchService: SearchService, private catalogService: CatalogService) {
+    this.getPages(this.page);
+  }
 
   public search() {
-    console.log(this.searchTxt?.length);
     if (typeof this.searchTxt == 'undefined' && !this.searchTxt || this.searchTxt?.length <= 2) {
       console.warn("Please enter 3 or more characters");
     } else {
-      this.getPage(this.page);
+      this.getPages(this.page);
     }
   }
 
-  public getPage(page: number) {
+  public getPages(page: number) {
     this.pages = this.catalogService.catalog(page, this.size, this.searchTxt).pipe(
       tap(res => {
         this.showPaging = true;

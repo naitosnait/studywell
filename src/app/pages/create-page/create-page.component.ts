@@ -1,8 +1,9 @@
+import { Currency, Date, NewProgram } from './../../models/page';
 import { Component } from '@angular/core';
-import { Contacts, Item, CountItem, Page, FilterItem, Program, Location, Catalog } from '../../models/page';
+import { Contacts, Item, CountItem, Page, FilterItem, Program, Location, Catalog, Price } from '../../models/page';
 import { CatalogService } from 'app/services/catalog.service';
-import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
-import { Observable, Subject, concat, of } from 'rxjs';
+import { catchError, concatAll, distinctUntilChanged, map, mergeAll, switchAll, switchMap, tap } from 'rxjs/operators';
+import { Observable, Subject, concat, from, of } from 'rxjs';
 import { PageService } from '../../services/page.service';
 import { Router } from '@angular/router';
 
@@ -58,6 +59,13 @@ export class CreatePageComponent {
   programTypeInput$ = new Subject<string>();
   selectedProgramTypes: CountItem[] = <any>[];
 
+  currencies: Currency[];
+  livingForms: CountItem[];
+
+  disButton = true;
+
+  private programs: Map<number, NewProgram> = new Map<number, NewProgram>();
+
   constructor(private catalogService: CatalogService, private router: Router, private pageService: PageService) {
     // this.commonService.getCountries()
     //   .pipe(
@@ -88,12 +96,16 @@ export class CreatePageComponent {
     this.loadLanguages();
     this.loadSubjects();
     this.loadProgramTypes();
+
+    this.catalogService.getCurrencies()
+      .subscribe(s => this.currencies = s);
+
+    this.catalogService.getLivingForms()
+      .subscribe(s => this.livingForms = s);
   }
 
   public onChangeCountry(event: any) {
     var countryId = event.target.value;
-    console.log(this.name);
-
     this.getCities(countryId).subscribe();
   }
 
@@ -109,34 +121,67 @@ export class CreatePageComponent {
     this.studyType = { id: id, name: name, filter: true } as FilterItem;
   }
 
+  public onChangeProgram(event: any, programId: number, fieldName: string) {
+    var value = event.target.value;
+    var newProgram = this.programs.get(programId);
+
+    switch (fieldName) {
+      case "currency":
+        value = this.currencies.find(x => x.currency = value);
+        break;
+      case "living":
+        value = this.livingForms.find(x => x.id = value);
+        break;
+    }
+
+    if (typeof newProgram != 'undefined' && newProgram) {
+      newProgram[fieldName] = value;
+      this.programs[programId] = newProgram;
+    } else {
+      newProgram = {} as NewProgram;
+      newProgram[fieldName] = value;
+      this.programs.set(programId, newProgram);
+    }
+  }
+
   public trackByFn(item: CountItem) {
     return item.id;
   }
 
   public createPage() {
-    this.pageService.createPage({
-      name: this.name,
-      address: this.address,
-      description: this.description,
-      country: { id: 17, name: "Великобритания" } as Item,
-      city: { id: 252, name: "Лондон" } as Item,
-      location: { coordinates: [0, 0] } as Location,
-      contacts: {
-        email: this.email,
-        tel: this.tel,
-        site: this.site
-      } as Contacts,
-      orgtypes: [this.orgType],
-      studytypes: [this.studyType],
-      founded: this.founded,
-      subjects: this.convertItemsToFilterItem(this.selectedSubjects),
-      language: this.convertItemsToFilterItem(this.selectedLanguages),
-      events: this.convertItemsToFilterItem(this.selectedEvents),
-      programs: this.convertItemsToProgram(this.selectedProgramTypes),
-      images: [],
-      videos: [],
-      base_url: ""
-    } as Page).subscribe(res => this.router.navigate(['/pages/page', res]));
+    this.price()
+      .pipe(
+        mergeAll(),
+        map(_ => {
+          var p = {
+            name: this.name,
+            address: this.address,
+            description: this.description,
+            country: { id: 17, name: "Великобритания" } as Item,
+            city: { id: 252, name: "Лондон" } as Item,
+            location: { coordinates: [0, 0] } as Location,
+            contacts: {
+              email: this.email,
+              tel: this.tel,
+              site: this.site
+            } as Contacts,
+            orgtypes: [this.orgType],
+            studytypes: [this.studyType],
+            founded: this.founded,
+            subjects: this.convertItemsToFilterItem(this.selectedSubjects),
+            language: this.convertItemsToFilterItem(this.selectedLanguages),
+            events: this.convertItemsToFilterItem(this.selectedEvents),
+            programs: this.convertItemsToProgram(this.selectedProgramTypes),
+            images: [],
+            videos: [],
+            base_url: ""
+          } as Page;
+
+          console.log(p);
+          return p;
+        }),
+        switchMap(page => this.pageService.createPage(page)))
+      .subscribe(res => this.router.navigate(['/pages/page', res]));
   }
 
   private loadEvents() {
@@ -200,7 +245,6 @@ export class CreatePageComponent {
           catchError(() => of([])), // empty list on error
           tap(s => {
             this.programTypesLoading = false;
-            console.log(this.selectedProgramTypes);
           })
         ))
       )
@@ -223,7 +267,40 @@ export class CreatePageComponent {
 
   private convertItemsToProgram(arr: CountItem[]) {
     var nerArr: Program[] = [];
-    arr.forEach(e => nerArr.push({ id: e.id, name: e.name } as Program));
+    arr.forEach(e => nerArr.push(this.createNewProgram(e)));
     return nerArr;
+  }
+
+  private createNewProgram(program: CountItem): Program {
+    var newProgram = this.programs.get(program.id);
+    var date = [{ startdate: newProgram?.dateFrom, enddate: newProgram?.dateTo } as Date];
+    console.log(newProgram);
+
+    return {
+      id: program.id,
+      name: program.name,
+      price: newProgram.calcprice?.price,
+      age: this.getAge(newProgram),
+      date: date,
+      living: newProgram?.living ?? this.livingForms[0],
+      period: newProgram?.period
+    } as Program;
+  }
+
+  private price() {
+    return from(this.programs).pipe(map(x => this.calcPrice(+x[1].price, x[1].currency, x[0])));
+  }
+
+  private calcPrice(price: number, curr: Currency, programId: number): Observable<Price> {
+    var currency: Currency = curr ?? this.currencies[0];
+    var newProgram = this.programs.get(programId);
+    return this.pageService.calcPrice(price, currency.original_currency, currency.currency)
+      .pipe(tap(res => newProgram.calcprice = res));
+  }
+
+  private getAge(newProgram: NewProgram): number[] {
+    if (newProgram?.ageFrom == null || newProgram?.ageTo == null)
+      return [];
+    return [newProgram?.ageFrom, newProgram?.ageTo];
   }
 }

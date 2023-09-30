@@ -16,6 +16,8 @@
       <div class="col-md-2">
         <button type="button" class="profile-edit-btn" name="btnAddMore"
           (click)="editPage()">Edit Page</button>
+          <button type="button" class="profile-edit-btn" name="btnAddMore"
+          (click)="deletePage()">Delete Page</button>
       </div>
     </div>
     <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
@@ -142,12 +144,12 @@
                       <label>price</label>
                     </div>
                     <div class="col-md-1">
-                      <!-- <p>{{p.price.original_price}}</p>
-                        <p>{{p.price.original_currency}}</p>
-                        <p>{{p.price.currency}}</p>
-                        <p>{{p.price.calc_price}}</p>
-                        <p>{{p.price.calc_currency}}</p>
-                        <p>{{p.price.currency_c}}</p> -->
+                      <p>{{p.price.original_price}}</p>
+                        <p>{{p.price?.original_currency}}</p>
+                        <p>{{p.price?.currency}}</p>
+                        <p>{{p.price?.calc_price}}</p>
+                        <p>{{p.price?.calc_currency}}</p>
+                        <p>{{p.price?.currency_c}}</p>
                     </div>
                   </div>
                   <div class="row">

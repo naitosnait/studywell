@@ -150,7 +150,6 @@
                   <label>Subjects</label>
                   <ng-select [items]="subjects$ | async"
                     bindLabel="name"
-                    [addTag]="true"
                     [multiple]="true"
                     [hideSelected]="true"
                     [trackByFn]="trackByFn"
@@ -168,10 +167,9 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="form-group">
-                  <label>events</label>
+                  <label>Events</label>
                   <ng-select [items]="events$ | async"
                     bindLabel="name"
-                    [addTag]="true"
                     [multiple]="true"
                     [hideSelected]="true"
                     [trackByFn]="trackByFn"
@@ -192,7 +190,6 @@
                   <label>Program types</label>
                   <ng-select [items]="programTypes$ | async"
                     bindLabel="name"
-                    [addTag]="true"
                     [multiple]="true"
                     [hideSelected]="true"
                     [trackByFn]="trackByFn"
@@ -203,6 +200,84 @@
                     [typeahead]="programTypeInput$"
                     [(ngModel)]="selectedProgramTypes">
                   </ng-select>
+                </div>
+              </div>
+            </div>
+
+            <div *ngFor="let s of selectedProgramTypes" class="new-page">
+              <div class="row">
+                <span>{{s.name}}</span>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Price</label>
+                    <input type="number" class="form-control"
+                      placeholder="price"
+                      (change)="onChangeProgram($event, s.id, 'price')">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Currency</label>
+                    <select name="select" class="form-select"
+                      (change)="onChangeProgram($event, s.id, 'currency')">
+                      <option *ngFor="let c of currencies" [value]="c.currency">{{c.original_currency}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Age from</label>
+                    <input type="text" class="form-control" placeholder="age"
+                      (change)="onChangeProgram($event, s.id, 'ageFrom')">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Age to</label>
+                    <input type="text" class="form-control" placeholder="age"
+                      (change)="onChangeProgram($event, s.id, 'ageTo')">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>date from</label>
+                    <input type="date" class="form-control" placeholder="date"
+                      (change)="onChangeProgram($event, s.id, 'dateFrom')">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>date to</label>
+                    <input type="date" class="form-control" placeholder="date"
+                      (change)="onChangeProgram($event, s.id, 'dateTo')">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Period</label>
+                    <input type="text" class="form-control" placeholder="period"
+                      (change)="onChangeProgram($event, s.id, 'period')">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Living form</label>
+                    <select name="select" class="form-select"
+                      (change)="onChangeProgram($event, s.id, 'living')">
+                      <option *ngFor="let c of livingForms" [value]="c.id">{{c.name}}</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>

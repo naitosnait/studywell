@@ -23,15 +23,19 @@ export class PageComponent {
     if (!ages || ages?.length == 0) {
       return "None";
     }
-    switch (ages.length) {
+    switch (ages?.length) {
       case 1:
         return ages[0];
       default:
-        return `${ages[0]}-${ages[ages.length - 1]}`;
+        return `${ages[0]}-${ages[ages?.length - 1]}`;
     }
   }
 
   public editPage() {
     this.router.navigate(['/pages/edit', this.page.id]);
+  }
+
+  public deletePage() {
+    this.pageService.deletePage(this.page).subscribe(() => this.router.navigate(['/pages/all']));
   }
 }

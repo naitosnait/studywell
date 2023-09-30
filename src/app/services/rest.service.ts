@@ -17,7 +17,7 @@ export class RestService {
     this.url = environment.apiUrl;
   }
 
-  httpOptionsGet = {
+  httpOptions = {
     headers: new HttpHeaders({
       'accept': 'application/json',
     }),
@@ -33,7 +33,7 @@ export class RestService {
   };
 
   public get<T>(url: string): Observable<T> {
-    return this.http.get<T>(this.url + url, this.httpOptionsGet);
+    return this.http.get<T>(this.url + url, this.httpOptions);
   }
 
   public post<T>(url: string, body: any): Observable<T> {
@@ -41,13 +41,13 @@ export class RestService {
       .pipe(catchError(this.handleError));
   }
 
-  public put<T>(url: string, body: any, options?: any): Observable<T> {
+  public put<T>(url: string, body: any): Observable<T> {
     return this.http.put<T>(this.url + url, body, this.httpOptionsPost)
       .pipe(catchError(this.handleError));
   }
 
-  public delete(url: string, options?: any) {
-    return this.http.delete(this.url + url, options);
+  public delete<T>(url: string): Observable<T> {
+    return this.http.delete<T>(this.url + url, this.httpOptions);
   }
 
   private handleError(error: HttpErrorResponse) {
