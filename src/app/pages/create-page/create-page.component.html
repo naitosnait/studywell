@@ -13,6 +13,7 @@
                 <div class="form-group">
                   <label>Name</label>
                   <input type="text" class="form-control" placeholder="name"
+                    [ngClass]="validateName"
                     [(ngModel)]="name">
                 </div>
               </div>
@@ -20,6 +21,7 @@
                 <div class="form-group">
                   <label>founded</label>
                   <input type="text" class="form-control"
+                    [ngClass]="validateFounded"
                     placeholder="founded"
                     [(ngModel)]="founded">
                 </div>
@@ -38,6 +40,7 @@
                 <div class="form-group">
                   <label>email</label>
                   <input type="text" class="form-control" placeholder="email"
+                    [ngClass]="validateEmail"
                     [(ngModel)]="email">
                 </div>
               </div>
@@ -74,6 +77,7 @@
                 <div class="form-group">
                   <label>Address</label>
                   <input type="text" class="form-control"
+                    [ngClass]="validateAddress"
                     placeholder="address" [(ngModel)]="address">
                 </div>
               </div>
@@ -129,7 +133,6 @@
                   <label>Languages</label>
                   <ng-select [items]="languages$ | async"
                     bindLabel="name"
-                    [addTag]="true"
                     [multiple]="true"
                     [hideSelected]="true"
                     [trackByFn]="trackByFn"
@@ -138,7 +141,8 @@
                     placeholder="Select languages"
                     typeToSearchText="Please enter 3 or more characters"
                     [typeahead]="languageInput$"
-                    [(ngModel)]="selectedLanguages">
+                    [(ngModel)]="selectedLanguages"
+                    [ngClass]="validateLanguages">
                   </ng-select>
                 </div>
               </div>
@@ -158,7 +162,8 @@
                     placeholder="Select subjects"
                     typeToSearchText="Please enter 3 or more characters"
                     [typeahead]="subjectInput$"
-                    [(ngModel)]="selectedSubjects">
+                    [(ngModel)]="selectedSubjects"
+                    [ngClass]="validateSubjects">
                   </ng-select>
                 </div>
               </div>
@@ -178,7 +183,8 @@
                     placeholder="Select events"
                     typeToSearchText="Please enter 3 or more characters"
                     [typeahead]="eventInput$"
-                    [(ngModel)]="selectedEvents">
+                    [(ngModel)]="selectedEvents"
+                    [ngClass]="validateEvents">
                   </ng-select>
                 </div>
               </div>
@@ -198,7 +204,8 @@
                     placeholder="Select programTypes"
                     typeToSearchText="Please enter 3 or more characters"
                     [typeahead]="programTypeInput$"
-                    [(ngModel)]="selectedProgramTypes">
+                    (change)="onChangeProgram($event)"
+                    [ngClass]="validateProgramTypes">
                   </ng-select>
                 </div>
               </div>
@@ -212,16 +219,16 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Price</label>
-                    <input type="number" class="form-control"
+                    <input type="number" class="form-control" [ngClass]="validateParam(s.id, 'price')"
                       placeholder="price"
-                      (change)="onChangeProgram($event, s.id, 'price')">
+                      (change)="onChangeProgramParams($event, s.id, 'price')">
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Currency</label>
                     <select name="select" class="form-select"
-                      (change)="onChangeProgram($event, s.id, 'currency')">
+                      (change)="onChangeProgramParams($event, s.id, 'currency')">
                       <option *ngFor="let c of currencies" [value]="c.currency">{{c.original_currency}}</option>
                     </select>
                   </div>
@@ -232,15 +239,15 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Age from</label>
-                    <input type="text" class="form-control" placeholder="age"
-                      (change)="onChangeProgram($event, s.id, 'ageFrom')">
+                    <input type="number" class="form-control" placeholder="age" [ngClass]="validateParam(s.id, 'ageFrom')"
+                      (change)="onChangeProgramParams($event, s.id, 'ageFrom')">
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Age to</label>
-                    <input type="text" class="form-control" placeholder="age"
-                      (change)="onChangeProgram($event, s.id, 'ageTo')">
+                    <input type="number" class="form-control" placeholder="age" [ngClass]="validateParam(s.id, 'ageTo')"
+                      (change)="onChangeProgramParams($event, s.id, 'ageTo')">
                   </div>
                 </div>
               </div>
@@ -248,16 +255,23 @@
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
+                    <label>Documents date</label>
+                    <input type="date" class="form-control" placeholder="date" [ngClass]="validateParam(s.id, 'documents')"
+                      (change)="onChangeProgramParams($event, s.id, 'documents')">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
                     <label>date from</label>
-                    <input type="date" class="form-control" placeholder="date"
-                      (change)="onChangeProgram($event, s.id, 'dateFrom')">
+                    <input type="date" class="form-control" placeholder="date" [ngClass]="validateParam(s.id, 'dateFrom')"
+                      (change)="onChangeProgramParams($event, s.id, 'dateFrom')">
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>date to</label>
-                    <input type="date" class="form-control" placeholder="date"
-                      (change)="onChangeProgram($event, s.id, 'dateTo')">
+                    <input type="date" class="form-control" placeholder="date" [ngClass]="validateParam(s.id, 'dateTo')"
+                      (change)="onChangeProgramParams($event, s.id, 'dateTo')">
                   </div>
                 </div>
               </div>
@@ -266,15 +280,15 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Period</label>
-                    <input type="text" class="form-control" placeholder="period"
-                      (change)="onChangeProgram($event, s.id, 'period')">
+                    <input type="text" class="form-control" placeholder="period" [ngClass]="validateParam(s.id, 'period')"
+                      (change)="onChangeProgramParams($event, s.id, 'period')">
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Living form</label>
                     <select name="select" class="form-select"
-                      (change)="onChangeProgram($event, s.id, 'living')">
+                      (change)="onChangeProgramParams($event, s.id, 'living')">
                       <option *ngFor="let c of livingForms" [value]="c.id">{{c.name}}</option>
                     </select>
                   </div>
@@ -286,7 +300,7 @@
               <div class="col-md-12">
                 <div class="form-group">
                   <label>description</label>
-                  <textarea rows="5" class="form-control"
+                  <textarea rows="5" class="form-control description"
                     placeholder="Here can be your description"
                     [(ngModel)]="description">bla bla</textarea>
                 </div>

@@ -39,10 +39,9 @@ export const AppRoutes: Routes = [{
         path: 'page/:id',
         component: PageComponent
     }, {
-        path: 'edit/:id',
-        component: EditPageComponent
-    },
-    {
+    //     path: 'edit/:id',
+    //     component: EditPageComponent
+    // }, {
         path: 'all',
         component: PagesComponent
     }

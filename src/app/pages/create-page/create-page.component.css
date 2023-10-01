@@ -33,3 +33,15 @@
 .disabled {
   background-color: gray;
 }
+
+.validate-error {
+  border-color: #b94a48;
+}
+
+.description {
+  min-height: calc(3.5em + 5.75rem + 2px);
+}
+
+.validate-error ::ng-deep .ng-select-container {
+  border-color: #b94a48;
+}

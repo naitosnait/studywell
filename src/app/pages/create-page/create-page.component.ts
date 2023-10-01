@@ -1,8 +1,8 @@
-import { Currency, Date, NewProgram } from './../../models/page';
+import { Currency, Date, NewProgram, ValidateProgram } from './../../models/page';
 import { Component } from '@angular/core';
 import { Contacts, Item, CountItem, Page, FilterItem, Program, Location, Catalog, Price } from '../../models/page';
 import { CatalogService } from 'app/services/catalog.service';
-import { catchError, concatAll, distinctUntilChanged, map, mergeAll, switchAll, switchMap, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, mergeAll, switchMap, tap } from 'rxjs/operators';
 import { Observable, Subject, concat, from, of } from 'rxjs';
 import { PageService } from '../../services/page.service';
 import { Router } from '@angular/router';
@@ -19,21 +19,14 @@ export class CreatePageComponent {
 
   public countries: CountItem[] = [];
   public cities: CountItem[] = [];
-  public languages: CountItem[] = [];
 
-  public subjects: CountItem[] = [];
   public studytypes: CountItem[] = [];
   public orgtypes: CountItem[] = [];
 
   public name: string = "";
   public description: string = "";
   public founded: string = "";
-  public city: Item;
-  public country: Item;
   public address: string = "";
-
-  public coordinate1: number = 0;
-  public coordinate2: number = 0;
 
   public site: string = "";
   public email: string = "";
@@ -57,14 +50,27 @@ export class CreatePageComponent {
   programTypes$: Observable<CountItem[]>;
   programTypesLoading = false;
   programTypeInput$ = new Subject<string>();
-  selectedProgramTypes: CountItem[] = <any>[];
+  selectedProgramTypes: CountItem[] = [];
 
   currencies: Currency[];
   livingForms: CountItem[];
 
-  disButton = true;
+  public validateName: string;
+  public validateDescription: string;
+  public validateFounded: string;
+  public validateAddress: string;
+
+  public validateSite: string;
+  public validateEmail: string;
+  public validateTel: string;
+
+  public validateEvents: string;
+  public validateLanguages: string;
+  public validateSubjects: string;
+  public validateProgramTypes: string;
 
   private programs: Map<number, NewProgram> = new Map<number, NewProgram>();
+  private validatePrograms: Map<number, ValidateProgram> = new Map<number, ValidateProgram>();
 
   constructor(private catalogService: CatalogService, private router: Router, private pageService: PageService) {
     // this.commonService.getCountries()
@@ -121,10 +127,12 @@ export class CreatePageComponent {
     this.studyType = { id: id, name: name, filter: true } as FilterItem;
   }
 
-  public onChangeProgram(event: any, programId: number, fieldName: string) {
-    var value = event.target.value;
-    var newProgram = this.programs.get(programId);
+  public onChangeProgram(event: CountItem[]) {
+    this.selectedProgramTypes = event;
+  }
 
+  public onChangeProgramParams(event: any, programId: number, fieldName: string) {
+    var value = event.target.value;
     switch (fieldName) {
       case "currency":
         value = this.currencies.find(x => x.currency = value);
@@ -134,14 +142,9 @@ export class CreatePageComponent {
         break;
     }
 
-    if (typeof newProgram != 'undefined' && newProgram) {
-      newProgram[fieldName] = value;
-      this.programs[programId] = newProgram;
-    } else {
-      newProgram = {} as NewProgram;
-      newProgram[fieldName] = value;
-      this.programs.set(programId, newProgram);
-    }
+    var newProgram = this.programs.get(programId) ?? new NewProgram();
+    newProgram[fieldName] = value;
+    this.programs.set(programId, newProgram);
   }
 
   public trackByFn(item: CountItem) {
@@ -149,6 +152,9 @@ export class CreatePageComponent {
   }
 
   public createPage() {
+    if (!this.validate())
+      return;
+
     this.price()
       .pipe(
         mergeAll(),
@@ -177,11 +183,15 @@ export class CreatePageComponent {
             base_url: ""
           } as Page;
 
-          console.log(p);
           return p;
         }),
         switchMap(page => this.pageService.createPage(page)))
       .subscribe(res => this.router.navigate(['/pages/page', res]));
+  }
+
+  public validateParam(programIs: number, paramName: string) {
+    var vp = this.validatePrograms.get(programIs);
+    return typeof vp != 'undefined' && vp ? vp[paramName] : "";
   }
 
   private loadEvents() {
@@ -267,14 +277,13 @@ export class CreatePageComponent {
 
   private convertItemsToProgram(arr: CountItem[]) {
     var nerArr: Program[] = [];
-    arr.forEach(e => nerArr.push(this.createNewProgram(e)));
+    arr.forEach((e, i) => nerArr.push(this.createNewProgram(e, i)));
     return nerArr;
   }
 
-  private createNewProgram(program: CountItem): Program {
+  private createNewProgram(program: CountItem, index: number): Program {
     var newProgram = this.programs.get(program.id);
-    var date = [{ startdate: newProgram?.dateFrom, enddate: newProgram?.dateTo } as Date];
-    console.log(newProgram);
+    var date = [{ id: index, documents: newProgram?.documents, startdate: newProgram?.dateFrom, enddate: newProgram?.dateTo } as Date];
 
     return {
       id: program.id,
@@ -302,5 +311,177 @@ export class CreatePageComponent {
     if (newProgram?.ageFrom == null || newProgram?.ageTo == null)
       return [];
     return [newProgram?.ageFrom, newProgram?.ageTo];
+  }
+
+  private validate() {
+    var valid: boolean[] = [];
+
+    if (typeof this.name != 'undefined' && this.name) {
+      this.validateName = "";
+      valid.push(true);
+    } else {
+      this.validateName = "validate-error";
+      valid.push(false);
+    }
+
+    if (typeof this.founded != 'undefined' && this.founded) {
+      this.validateFounded = "";
+      valid.push(true);
+    } else {
+      this.validateFounded = "validate-error";
+      valid.push(false);
+    }
+
+    // if (typeof this.site != 'undefined' && this.site) {
+    //   this.validateSite = "";
+    //   valid.push(true);
+    // } else {
+    //   this.validateSite = "validate-error";
+    //   valid.push(false);
+    // }
+
+    if (typeof this.email != 'undefined' && this.email) {
+      this.validateEmail = "";
+      valid.push(true);
+    } else {
+      this.validateEmail = "validate-error";
+      valid.push(false);
+    }
+
+    // if (typeof this.tel != 'undefined' && this.tel) {
+    //   this.validateTel = "";
+    //   valid.push(true);
+    // } else {
+    //   this.validateTel = "validate-error";
+    //   valid.push(false);
+    // }
+
+    if (typeof this.address != 'undefined' && this.address) {
+      this.validateAddress = "";
+      valid.push(true);
+    } else {
+      this.validateAddress = "validate-error";
+      valid.push(false);
+    }
+
+    if (this.selectedEvents?.length > 0) {
+      this.validateEvents = "";
+      valid.push(true);
+    } else {
+      this.validateEvents = "validate-error";
+      valid.push(false);
+    }
+
+    if (this.selectedLanguages?.length > 0) {
+      this.validateLanguages = "";
+      valid.push(true);
+    } else {
+      this.validateLanguages = "validate-error";
+      valid.push(false);
+    }
+
+    if (this.selectedSubjects?.length > 0) {
+      this.validateSubjects = "";
+      valid.push(true);
+    } else {
+      this.validateSubjects = "validate-error";
+      valid.push(false);
+    }
+
+    if (this.selectedProgramTypes?.length > 0) {
+      this.validateProgramTypes = "";
+      valid.push(this.validateProgramParams());
+    } else {
+      this.validateProgramTypes = "validate-error";
+      valid.push(false);
+    }
+
+    return valid.reduce((sum, next) => sum && next, true);
+  }
+
+  private validateProgramParams() {
+    var valid: boolean[] = [];
+
+    if (this.programs.size <= 0) {
+      this.selectedProgramTypes.forEach(x => {
+        this.validatePrograms.set(x.id, {
+          ageFrom: "validate-error",
+          ageTo: "validate-error",
+          dateFrom: "validate-error",
+          dateTo: "validate-error",
+          documents: "validate-error",
+          period: "validate-error",
+          price: "validate-error"
+        } as ValidateProgram);
+      });
+      valid.push(false);
+    }    else {
+      this.programs.forEach((x, y) => {
+        var vp = this.validatePrograms.get(y) ?? new ValidateProgram();
+
+        if (typeof x?.ageFrom != 'undefined' && x?.ageFrom) {
+          this.addValid(vp, y, "ageFrom", "");
+          valid.push(true);
+        } else {
+          this.addValid(vp, y, "ageFrom", "validate-error");
+          valid.push(false);
+        }
+
+        if (typeof x?.ageTo != 'undefined' && x?.ageTo) {
+          this.addValid(vp, y, "ageTo", "");
+          valid.push(true);
+        } else {
+          this.addValid(vp, y, "ageTo", "validate-error");
+          valid.push(false);
+        }
+
+        if (typeof x?.dateFrom != 'undefined' && x?.dateFrom) {
+          this.addValid(vp, y, "dateFrom", "");
+          valid.push(true);
+        } else {
+          this.addValid(vp, y, "dateFrom", "validate-error");
+          valid.push(false);
+        }
+
+        if (typeof x?.dateTo != 'undefined' && x?.dateTo) {
+          this.addValid(vp, y, "dateTo", "");
+          valid.push(true);
+        } else {
+          this.addValid(vp, y, "dateTo", "validate-error");
+          valid.push(false);
+        }
+
+        if (typeof x?.price != 'undefined' && x?.price) {
+          this.addValid(vp, y, "price", "");
+          valid.push(true);
+        } else {
+          this.addValid(vp, y, "price", "validate-error");
+          valid.push(false);
+        }
+
+        if (typeof x?.documents != 'undefined' && x?.documents) {
+          this.addValid(vp, y, "documents", "");
+          valid.push(true);
+        } else {
+          this.addValid(vp, y, "documents", "validate-error");
+          valid.push(false);
+        }
+
+        if (typeof x?.period != 'undefined' && x?.period) {
+          this.addValid(vp, y, "period", "");
+          valid.push(true);
+        } else {
+          this.addValid(vp, y, "period", "validate-error");
+          valid.push(false);
+        }
+      });
+    }
+
+    return valid.reduce((sum, next) => sum && next, true);
+  }
+
+  private addValid(validateProgram: ValidateProgram, programId: number, fieldName: string, value: string) {
+    validateProgram[fieldName] = value;
+    this.validatePrograms.set(programId, validateProgram);
   }
 }

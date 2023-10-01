@@ -113,7 +113,7 @@ export interface Currency {
   count: number
 }
 
-export interface NewProgram {
+export class NewProgram {
   dateFrom: string;
   dateTo: string;
   ageFrom: number;
@@ -123,4 +123,15 @@ export interface NewProgram {
   calcprice: any;
   living: Item;
   period: string;
+  documents: string;
+}
+
+export class ValidateProgram {
+  dateFrom: string;
+  dateTo: string;
+  ageFrom: string;
+  ageTo: string;
+  price: string;
+  period: string;
+  documents: string;
 }
