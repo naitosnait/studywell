@@ -283,7 +283,12 @@ export class CreatePageComponent {
 
   private createNewProgram(program: CountItem, index: number): Program {
     var newProgram = this.programs.get(program.id);
-    var date = [{ id: index, documents: newProgram?.documents, startdate: newProgram?.dateFrom, enddate: newProgram?.dateTo } as Date];
+    var date = [{
+      id: index,
+      documents: newProgram?.documents + "T00:00:00.036",
+      startdate: newProgram?.dateFrom + "T00:00:00.036",
+      enddate: newProgram?.dateTo + "T00:00:00.036"
+    } as Date];
 
     return {
       id: program.id,
@@ -415,7 +420,7 @@ export class CreatePageComponent {
         } as ValidateProgram);
       });
       valid.push(false);
-    }    else {
+    } else {
       this.programs.forEach((x, y) => {
         var vp = this.validatePrograms.get(y) ?? new ValidateProgram();
 
