@@ -3,6 +3,11 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">
+          <ngb-alert *ngIf="validateMessage" type="danger"
+            (closed)="validateMessage = ''">
+            {{ validateMessage }}
+          </ngb-alert>
+
           <div class="header">
             <h4 class="title">Create page</h4>
           </div>
@@ -116,7 +121,7 @@
                   </select>
                 </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-md-6" *ngIf="studyType">
                 <div class="form-group">
                   <label>study type</label>
                   <select name="select" class="form-select"
@@ -215,11 +220,19 @@
               <div class="row">
                 <span>{{s.name}}</span>
               </div>
+              <div *ngFor="let vpm of getValidationMessages(s.id); let i=index">
+                <ngb-alert
+                  type="danger"
+                  (closed)="removeValidationMessages(i)">
+                  {{ vpm }}
+                </ngb-alert>
+              </div>
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Price</label>
-                    <input type="number" class="form-control" [ngClass]="validateParam(s.id, 'price')"
+                    <input type="number" class="form-control"
+                      [ngClass]="validateParam(s.id, 'price')"
                       placeholder="price"
                       (change)="onChangeProgramParams($event, s.id, 'price')">
                   </div>
@@ -239,39 +252,56 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Age from</label>
-                    <input type="number" class="form-control" placeholder="age" [ngClass]="validateParam(s.id, 'ageFrom')"
+                    <input type="number" class="form-control" placeholder="age"
+                      [ngClass]="validateParam(s.id, 'ageFrom')"
                       (change)="onChangeProgramParams($event, s.id, 'ageFrom')">
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Age to</label>
-                    <input type="number" class="form-control" placeholder="age" [ngClass]="validateParam(s.id, 'ageTo')"
+                    <input type="number" class="form-control" placeholder="age"
+                      [ngClass]="validateParam(s.id, 'ageTo')"
                       (change)="onChangeProgramParams($event, s.id, 'ageTo')">
                   </div>
                 </div>
               </div>
 
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>Documents date</label>
-                    <input type="date" class="form-control" placeholder="date" [ngClass]="validateParam(s.id, 'documents')"
-                      (change)="onChangeProgramParams($event, s.id, 'documents')">
+              <div *ngFor="let p of getDates(s.id); let i=index">
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>Documents date</label>
+                      <input type="date" class="form-control" placeholder="date"
+                        [ngClass]="validateDateParam(s.id, 'documents', i)"
+                        (change)="onChangeProgramDateParams($event, s.id, 'documents', i)">
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>date from</label>
-                    <input type="date" class="form-control" placeholder="date" [ngClass]="validateParam(s.id, 'dateFrom')"
-                      (change)="onChangeProgramParams($event, s.id, 'dateFrom')">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>date from</label>
+                      <input type="date" class="form-control" placeholder="date"
+                        [ngClass]="validateDateParam(s.id, 'startdate', i)"
+                        (change)="onChangeProgramDateParams($event, s.id, 'startdate', i)">
+                    </div>
                   </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label>date to</label>
-                    <input type="date" class="form-control" placeholder="date" [ngClass]="validateParam(s.id, 'dateTo')"
-                      (change)="onChangeProgramParams($event, s.id, 'dateTo')">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label>date to</label>
+                      <input type="date" class="form-control" placeholder="date"
+                        [ngClass]="validateDateParam(s.id, 'enddate', i)"
+                        (change)="onChangeProgramDateParams($event, s.id, 'enddate', i)">
+                    </div>
+                  </div>
+                  <div class="col-md-1">
+                    <div class="form-group"
+                      [ngClass]="hideAddButtons(s.id, i)">
+                      <button class="btn" (click)="addDates(s.id)">+</button>
+                    </div>
+                    <div class="form-group"
+                      [ngClass]="hideRemoveButtons(s.id, i)">
+                      <button class="btn" (click)="removeDates(s.id, i)">&mdash;</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -280,7 +310,8 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Period</label>
-                    <input type="text" class="form-control" placeholder="period" [ngClass]="validateParam(s.id, 'period')"
+                    <input type="text" class="form-control" placeholder="period"
+                      [ngClass]="validateParam(s.id, 'period')"
                       (change)="onChangeProgramParams($event, s.id, 'period')">
                   </div>
                 </div>

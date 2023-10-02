@@ -16,7 +16,7 @@
       <div class="col-md-2">
         <button type="button" class="profile-edit-btn" name="btnAddMore"
           (click)="editPage()">Edit Page</button>
-          <button type="button" class="profile-edit-btn" name="btnAddMore"
+        <button type="button" class="profile-edit-btn" name="btnAddMore"
           (click)="deletePage()">Delete Page</button>
       </div>
     </div>
@@ -33,7 +33,7 @@
                 <p class="description">{{page.orgtypes[0]?.name}}</p>
               </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="page.orgtypes[0]?.id == 1004">
               <div class="col-md-4">
                 <label>Study type</label>
               </div>
@@ -145,11 +145,11 @@
                     </div>
                     <div class="col-md-1">
                       <p>{{p.price.original_price}}</p>
-                        <p>{{p.price?.original_currency}}</p>
-                        <p>{{p.price?.currency}}</p>
-                        <p>{{p.price?.calc_price}}</p>
-                        <p>{{p.price?.calc_currency}}</p>
-                        <p>{{p.price?.currency_c}}</p>
+                      <p>{{p.price?.original_currency}}</p>
+                      <p>{{p.price?.currency}}</p>
+                      <p>{{p.price?.calc_price}}</p>
+                      <p>{{p.price?.calc_currency}}</p>
+                      <p>{{p.price?.currency_c}}</p>
                     </div>
                   </div>
                   <div class="row">
@@ -159,6 +159,7 @@
                     <div class="col-md-3" *ngFor="let d of p.date">
                       <p>{{d?.startdate | date :'dd.MM.yyyy'}} - {{d?.enddate |
                         date :'dd.MM.yyyy'}}</p>
+                      <p>{{d?.documents | date :'dd.MM.yyyy'}}</p>
                     </div>
                   </div>
                   <div class="row">

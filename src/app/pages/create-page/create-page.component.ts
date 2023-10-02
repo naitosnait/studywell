@@ -1,11 +1,12 @@
-import { Currency, Date, NewProgram, ValidateProgram } from './../../models/page';
+import { Currency, Date, NewProgram, ValidateDate, ValidateProgram } from './../../models/page';
 import { Component } from '@angular/core';
 import { Contacts, Item, CountItem, Page, FilterItem, Program, Location, Catalog, Price } from '../../models/page';
 import { CatalogService } from 'app/services/catalog.service';
-import { catchError, distinctUntilChanged, map, mergeAll, switchMap, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, map, mergeAll, switchMap, tap, filter } from 'rxjs/operators';
 import { Observable, Subject, concat, from, of } from 'rxjs';
 import { PageService } from '../../services/page.service';
 import { Router } from '@angular/router';
+import { isNullOrUndefined } from 'app/utils/utils';
 
 @Component({
   selector: 'create-page',
@@ -14,14 +15,17 @@ import { Router } from '@angular/router';
 })
 export class CreatePageComponent {
 
+  private newPrograms: Map<number, NewProgram> = new Map<number, NewProgram>();
+  private validatePrograms: Map<number, ValidateProgram> = new Map<number, ValidateProgram>();
+
   private orgType: FilterItem;
-  private studyType: FilterItem;
+  public studyType: FilterItem;
 
   public countries: CountItem[] = [];
   public cities: CountItem[] = [];
 
-  public studytypes: CountItem[] = [];
-  public orgtypes: CountItem[] = [];
+  public studytypes: FilterItem[] = [];
+  public orgtypes: FilterItem[] = [];
 
   public name: string = "";
   public description: string = "";
@@ -32,28 +36,28 @@ export class CreatePageComponent {
   public email: string = "";
   public tel: string = "";
 
-  events$: Observable<CountItem[]>;
-  eventsLoading = false;
-  eventInput$ = new Subject<string>();
-  selectedEvents: CountItem[] = <any>[];
+  public events$: Observable<CountItem[]>;
+  public eventsLoading = false;
+  public eventInput$ = new Subject<string>();
+  public selectedEvents: CountItem[] = <any>[];
 
-  languages$: Observable<CountItem[]>;
-  languagesLoading = false;
-  languageInput$ = new Subject<string>();
-  selectedLanguages: CountItem[] = <any>[];
+  public languages$: Observable<CountItem[]>;
+  public languagesLoading = false;
+  public languageInput$ = new Subject<string>();
+  public selectedLanguages: CountItem[] = <any>[];
 
-  subjects$: Observable<CountItem[]>;
-  subjectsLoading = false;
-  subjectInput$ = new Subject<string>();
-  selectedSubjects: CountItem[] = <any>[];
+  public subjects$: Observable<CountItem[]>;
+  public subjectsLoading = false;
+  public subjectInput$ = new Subject<string>();
+  public selectedSubjects: CountItem[] = <any>[];
 
-  programTypes$: Observable<CountItem[]>;
-  programTypesLoading = false;
-  programTypeInput$ = new Subject<string>();
-  selectedProgramTypes: CountItem[] = [];
+  public programTypes$: Observable<CountItem[]>;
+  public programTypesLoading = false;
+  public programTypeInput$ = new Subject<string>();
+  public selectedProgramTypes: CountItem[] = [];
 
-  currencies: Currency[];
-  livingForms: CountItem[];
+  public currencies: Currency[];
+  public livingForms: CountItem[];
 
   public validateName: string;
   public validateDescription: string;
@@ -69,8 +73,7 @@ export class CreatePageComponent {
   public validateSubjects: string;
   public validateProgramTypes: string;
 
-  private programs: Map<number, NewProgram> = new Map<number, NewProgram>();
-  private validatePrograms: Map<number, ValidateProgram> = new Map<number, ValidateProgram>();
+  public validateMessage: string;
 
   constructor(private catalogService: CatalogService, private router: Router, private pageService: PageService) {
     // this.commonService.getCountries()
@@ -82,20 +85,17 @@ export class CreatePageComponent {
     //     }))
     //   .subscribe();
 
-    this.catalogService.getStudyTypes()
-      .subscribe((c: Catalog<CountItem>[]) => {
-        var items = c[0].items
-        this.studytypes = items;
-        var item = items[0];
-        this.studyType = { id: item.id, name: item.name, filter: true } as FilterItem;
-      });
-
     this.catalogService.getOrgTypes()
       .subscribe((c: Catalog<CountItem>[]) => {
         var items = c[0].items
-        this.orgtypes = items;
-        var item = items[0];
-        this.orgType = { id: item.id, name: item.name, filter: true } as FilterItem;
+        this.orgtypes = this.convertCountItemsToFilterItem(items);
+        this.orgType = this.orgtypes[0];
+      });
+
+    this.catalogService.getStudyTypes()
+      .subscribe((c: Catalog<CountItem>[]) => {
+        var items = c[0].items
+        this.studytypes = this.convertCountItemsToFilterItem(items);
       });
 
     this.loadEvents();
@@ -117,22 +117,43 @@ export class CreatePageComponent {
 
   public onChangeOrgType(event: any) {
     var id = event.target.value;
-    var name = this.orgtypes.find(x => x.id == id)?.name;
-    this.orgType = { id: id, name: name, filter: true } as FilterItem;
+    if (id != 1004)
+      this.studyType = null;
+    else
+      this.studyType = this.studytypes[0];
+
+    this.orgType = this.orgtypes.find(x => x.id == id);
   }
 
   public onChangeStudyType(event: any) {
     var id = event.target.value;
-    var name = this.studytypes.find(x => x.id == id)?.name;
-    this.studyType = { id: id, name: name, filter: true } as FilterItem;
+    this.studyType = this.studytypes.find(x => x.id == id);
   }
 
   public onChangeProgram(event: CountItem[]) {
     this.selectedProgramTypes = event;
+
+    if (this.selectedProgramTypes.length < this.newPrograms.size) {
+      var newProgramIds = Array.from(this.newPrograms.keys());
+      var unselectedProgramIds = newProgramIds.filter(s => !this.selectedProgramTypes.map(x => x.id).find(x => x == s));
+      unselectedProgramIds.forEach(x => {
+        this.newPrograms.delete(x);
+        this.validatePrograms.delete(x);
+      });
+    }
+
+    this.selectedProgramTypes.forEach(x => {
+      var newProgram = this.newPrograms.get(x.id);
+      if (isNullOrUndefined(newProgram)) {
+        this.newPrograms.set(x.id, new NewProgram());
+      }
+    });
   }
 
   public onChangeProgramParams(event: any, programId: number, fieldName: string) {
     var value = event.target.value;
+    var newProgram = this.newPrograms.get(programId);
+
     switch (fieldName) {
       case "currency":
         value = this.currencies.find(x => x.currency = value);
@@ -142,9 +163,19 @@ export class CreatePageComponent {
         break;
     }
 
-    var newProgram = this.programs.get(programId) ?? new NewProgram();
     newProgram[fieldName] = value;
-    this.programs.set(programId, newProgram);
+    this.newPrograms.set(programId, newProgram);
+  }
+
+  public onChangeProgramDateParams(event: any, programId: number, fieldName: string, index: number) {
+    var value = event.target.value;
+    var newProgram = this.newPrograms.get(programId)
+    var date = newProgram.date[index];
+    if (isNullOrUndefined(date.id))
+      date.id = index + 1;
+    date[fieldName] = value + "T00:00:00.036";
+    newProgram.date[index] = date;
+    this.newPrograms.set(programId, newProgram);
   }
 
   public trackByFn(item: CountItem) {
@@ -152,9 +183,10 @@ export class CreatePageComponent {
   }
 
   public createPage() {
-    if (!this.validate())
+    if (!this.validate()) {
+      this.validateMessage = "Please, fill in all required fields";
       return;
-
+    }
     this.price()
       .pipe(
         mergeAll(),
@@ -172,12 +204,12 @@ export class CreatePageComponent {
               site: this.site
             } as Contacts,
             orgtypes: [this.orgType],
-            studytypes: [this.studyType],
+            studytypes: isNullOrUndefined(this.studyType) ? [] : [this.studyType],
             founded: this.founded,
-            subjects: this.convertItemsToFilterItem(this.selectedSubjects),
-            language: this.convertItemsToFilterItem(this.selectedLanguages),
-            events: this.convertItemsToFilterItem(this.selectedEvents),
-            programs: this.convertItemsToProgram(this.selectedProgramTypes),
+            subjects: this.convertCountItemsToFilterItem(this.selectedSubjects),
+            language: this.convertCountItemsToFilterItem(this.selectedLanguages),
+            events: this.convertCountItemsToFilterItem(this.selectedEvents),
+            programs: this.getPrograms(),
             images: [],
             videos: [],
             base_url: ""
@@ -185,6 +217,7 @@ export class CreatePageComponent {
 
           return p;
         }),
+        tap(s => console.log(s)),
         switchMap(page => this.pageService.createPage(page)))
       .subscribe(res => this.router.navigate(['/pages/page', res]));
   }
@@ -192,6 +225,50 @@ export class CreatePageComponent {
   public validateParam(programIs: number, paramName: string) {
     var vp = this.validatePrograms.get(programIs);
     return typeof vp != 'undefined' && vp ? vp[paramName] : "";
+  }
+
+  public validateDateParam(programId: number, paramName: string, index: number) {
+    var vp = this.validatePrograms.get(programId);
+    var date = vp?.date[index];
+    return typeof date != 'undefined' && date ? date[paramName] : "";
+  }
+
+  public getDates(programId: number): Date[] {
+    return this.newPrograms.get(programId).date;
+  }
+
+  public addDates(programId: number) {
+    this.getDates(programId).push({} as Date);
+  }
+
+  public removeDates(programId: number, index: number) {
+    this.getDates(programId).splice(index, 1);
+  }
+
+  public getValidationMessages(programId: number) {
+    var vp = this.validatePrograms.get(programId);
+    return vp?.messages;
+  }
+
+  public removeValidationMessages(programId: number, index: number) {
+    var vp = this.validatePrograms.get(programId);
+    vp?.messages.splice(index, 1);
+  }
+
+  public hideAddButtons(programId: number, index: number) {
+    var date = this.getDates(programId);
+    if (date.length > 1 && index + 1 != date.length) {
+      return "none";
+    }
+    return "";
+  }
+
+  public hideRemoveButtons(programId: number, index: number) {
+    var date = this.getDates(programId);
+    if (date.length == 1 || index + 1 == date.length) {
+      return "none";
+    }
+    return "";
   }
 
   private loadEvents() {
@@ -261,7 +338,7 @@ export class CreatePageComponent {
     );
   }
 
-  private getCities(countryId: number) {
+  private getCities(countryId: number): Observable<Catalog<CountItem>[]> {
     return this.catalogService.getCities(countryId)
       .pipe(tap((c: Catalog<CountItem>[]) => {
         var items = c[0].items
@@ -269,45 +346,39 @@ export class CreatePageComponent {
       }));
   }
 
-  private convertItemsToFilterItem(arr: CountItem[]) {
+  private convertCountItemsToFilterItem(arr: CountItem[]): FilterItem[] {
     var nerArr: FilterItem[] = [];
     arr.forEach(e => nerArr.push({ id: e.id, name: e.name, filter: true } as FilterItem));
     return nerArr;
   }
 
-  private convertItemsToProgram(arr: CountItem[]) {
+  private getPrograms(): Program[] {
     var nerArr: Program[] = [];
-    arr.forEach((e, i) => nerArr.push(this.createNewProgram(e, i)));
+    this.selectedProgramTypes.forEach(e => nerArr.push(this.createNewProgram(e)));
     return nerArr;
   }
 
-  private createNewProgram(program: CountItem, index: number): Program {
-    var newProgram = this.programs.get(program.id);
-    var date = [{
-      id: index,
-      documents: newProgram?.documents + "T00:00:00.036",
-      startdate: newProgram?.dateFrom + "T00:00:00.036",
-      enddate: newProgram?.dateTo + "T00:00:00.036"
-    } as Date];
+  private createNewProgram(program: CountItem): Program {
+    var newProgram = this.newPrograms.get(program.id);
 
     return {
       id: program.id,
       name: program.name,
       price: newProgram.calcprice?.price,
       age: this.getAge(newProgram),
-      date: date,
+      date: newProgram.date,
       living: newProgram?.living ?? this.livingForms[0],
       period: newProgram?.period
     } as Program;
   }
 
-  private price() {
-    return from(this.programs).pipe(map(x => this.calcPrice(+x[1].price, x[1].currency, x[0])));
+  private price(): Observable<Observable<Price>> {
+    return from(this.newPrograms).pipe(map(x => this.calcPrice(+x[1].price, x[1].currency, x[0])));
   }
 
   private calcPrice(price: number, curr: Currency, programId: number): Observable<Price> {
     var currency: Currency = curr ?? this.currencies[0];
-    var newProgram = this.programs.get(programId);
+    var newProgram = this.newPrograms.get(programId);
     return this.pageService.calcPrice(price, currency.original_currency, currency.currency)
       .pipe(tap(res => newProgram.calcprice = res));
   }
@@ -318,7 +389,7 @@ export class CreatePageComponent {
     return [newProgram?.ageFrom, newProgram?.ageTo];
   }
 
-  private validate() {
+  private validate(): boolean {
     var valid: boolean[] = [];
 
     if (typeof this.name != 'undefined' && this.name) {
@@ -404,83 +475,100 @@ export class CreatePageComponent {
     return valid.reduce((sum, next) => sum && next, true);
   }
 
-  private validateProgramParams() {
+  private validateProgramParams(): boolean {
     var valid: boolean[] = [];
 
-    if (this.programs.size <= 0) {
-      this.selectedProgramTypes.forEach(x => {
-        this.validatePrograms.set(x.id, {
-          ageFrom: "validate-error",
-          ageTo: "validate-error",
-          dateFrom: "validate-error",
-          dateTo: "validate-error",
-          documents: "validate-error",
-          period: "validate-error",
-          price: "validate-error"
-        } as ValidateProgram);
-      });
-      valid.push(false);
-    } else {
-      this.programs.forEach((x, y) => {
-        var vp = this.validatePrograms.get(y) ?? new ValidateProgram();
+    this.newPrograms.forEach((np, programId) => {
+      var vp = this.validatePrograms.get(programId) ?? new ValidateProgram();
+      vp.messages = [];
 
-        if (typeof x?.ageFrom != 'undefined' && x?.ageFrom) {
-          this.addValid(vp, y, "ageFrom", "");
-          valid.push(true);
-        } else {
-          this.addValid(vp, y, "ageFrom", "validate-error");
+      if (typeof np?.ageFrom != 'undefined' && np?.ageFrom) {
+        if (np?.ageTo < np?.ageFrom) {
+          vp.messages.push("Age from cannot be greater than age to");
           valid.push(false);
+          this.addValid(vp, programId, "ageFrom", "validate-error");
+        } else {
+          this.addValid(vp, programId, "ageFrom", "");
+          valid.push(true);
         }
+      } else {
+        this.addValid(vp, programId, "ageFrom", "validate-error");
+        valid.push(false);
+      }
 
-        if (typeof x?.ageTo != 'undefined' && x?.ageTo) {
-          this.addValid(vp, y, "ageTo", "");
-          valid.push(true);
-        } else {
-          this.addValid(vp, y, "ageTo", "validate-error");
-          valid.push(false);
-        }
+      if (typeof np?.ageTo != 'undefined' && np?.ageTo) {
+        this.addValid(vp, programId, "ageTo", "");
+        valid.push(true);
+      } else {
+        this.addValid(vp, programId, "ageTo", "validate-error");
+        valid.push(false);
+      }
 
-        if (typeof x?.dateFrom != 'undefined' && x?.dateFrom) {
-          this.addValid(vp, y, "dateFrom", "");
-          valid.push(true);
-        } else {
-          this.addValid(vp, y, "dateFrom", "validate-error");
-          valid.push(false);
-        }
+      if (typeof np?.price != 'undefined' && np?.price) {
+        this.addValid(vp, programId, "price", "");
+        valid.push(true);
+      } else {
+        this.addValid(vp, programId, "price", "validate-error");
+        valid.push(false);
+      }
 
-        if (typeof x?.dateTo != 'undefined' && x?.dateTo) {
-          this.addValid(vp, y, "dateTo", "");
-          valid.push(true);
-        } else {
-          this.addValid(vp, y, "dateTo", "validate-error");
-          valid.push(false);
-        }
+      if (typeof np?.period != 'undefined' && np?.period) {
+        this.addValid(vp, programId, "period", "");
+        valid.push(true);
+      } else {
+        this.addValid(vp, programId, "period", "validate-error");
+        valid.push(false);
+      }
 
-        if (typeof x?.price != 'undefined' && x?.price) {
-          this.addValid(vp, y, "price", "");
-          valid.push(true);
-        } else {
-          this.addValid(vp, y, "price", "validate-error");
-          valid.push(false);
-        }
+      this.validateDate(np, vp);
+    });
 
-        if (typeof x?.documents != 'undefined' && x?.documents) {
-          this.addValid(vp, y, "documents", "");
-          valid.push(true);
-        } else {
-          this.addValid(vp, y, "documents", "validate-error");
-          valid.push(false);
-        }
+    return valid.reduce((sum, next) => sum && next, true);
+  }
 
-        if (typeof x?.period != 'undefined' && x?.period) {
-          this.addValid(vp, y, "period", "");
-          valid.push(true);
-        } else {
-          this.addValid(vp, y, "period", "validate-error");
+  private validateDate(np: NewProgram, vp: ValidateProgram): boolean {
+    var valid: boolean[] = [];
+
+    np.date.forEach((x, i) => {
+      var date = vp.date[i] ?? new ValidateDate();
+      if (typeof x?.startdate != 'undefined' && x?.startdate) {
+        if (x?.enddate < x?.startdate) {
+          vp.messages.push("Date to cannot be less than date from");
           valid.push(false);
+          date["startdate"] = "validate-error";
+        } else {
+          date["startdate"] = "";
+          valid.push(true);
         }
-      });
-    }
+      } else {
+        date["startdate"] = "validate-error";
+        valid.push(false);
+      }
+
+      if (typeof x?.enddate != 'undefined' && x?.enddate) {
+        date["enddate"] = "";
+        valid.push(true);
+      } else {
+        date["enddate"] = "validate-error";
+        valid.push(false);
+      }
+
+      if (typeof x?.documents != 'undefined' && x?.documents) {
+        if (x?.enddate < x?.startdate) {
+          vp.messages.push("Documents date cannot be greater than date from");
+          valid.push(false);
+          date["documents"] = "validate-error";
+        } else {
+          date["documents"] = "";
+        }
+        valid.push(true);
+      } else {
+        date["documents"] = "validate-error";
+        valid.push(false);
+      }
+
+      vp.date[i] = date;
+    });
 
     return valid.reduce((sum, next) => sum && next, true);
   }

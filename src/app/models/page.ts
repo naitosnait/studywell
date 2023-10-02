@@ -114,8 +114,7 @@ export interface Currency {
 }
 
 export class NewProgram {
-  dateFrom: string;
-  dateTo: string;
+  date: Date[] = [{} as Date];
   ageFrom: number;
   ageTo: number;
   price: string;
@@ -123,15 +122,19 @@ export class NewProgram {
   calcprice: any;
   living: Item;
   period: string;
-  documents: string;
 }
 
 export class ValidateProgram {
-  dateFrom: string;
-  dateTo: string;
+  date: ValidateDate[] = [];
   ageFrom: string;
   ageTo: string;
   price: string;
   period: string;
+  messages: string[] = [];
+}
+
+export class ValidateDate {
   documents: string;
+  startdate: string;
+  enddate: string;
 }

@@ -45,3 +45,11 @@
 .validate-error ::ng-deep .ng-select-container {
   border-color: #b94a48;
 }
+
+.none {
+  display: none;
+}
+
+.btn {
+  margin-top: 27px;
+}
