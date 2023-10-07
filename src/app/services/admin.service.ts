@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { CreateSuperUser, ExistSuperUser, ModifySuperUser, Permissions } from "app/models/admin";
 import { RestService } from "./rest.service";
 

@@ -37,9 +37,12 @@ export class CatalogService {
     return this.rest.get<Catalog<CountItem>[]>(url);
   }
 
-  public getOrgTypes(): Observable<Catalog<CountItem>[]> {
+  public getOrgTypes(): Observable<CountItem[]> {
     var url = "/catalog/orgtypes/";
-    return this.rest.get<Catalog<CountItem>[]>(url);
+    return this.rest.get<Catalog<CountItem>[]>(url).pipe(map((c: Catalog<CountItem>[]) => {
+      var items = c[0].items;
+      return items;
+    }));
   }
 
   public getSubjects(query?: string): Observable<CountItem[]> {

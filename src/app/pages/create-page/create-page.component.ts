@@ -19,14 +19,12 @@ export class CreatePageComponent {
   private newPrograms: Map<number, NewProgram> = new Map<number, NewProgram>();
   private validatePrograms: Map<number, ValidateProgram> = new Map<number, ValidateProgram>();
 
-  private orgType: FilterItem;
   public studyType: FilterItem;
 
   public countries: CountItem[] = [];
   public cities: CountItem[] = [];
 
   public studytypes: FilterItem[] = [];
-  public orgtypes: FilterItem[] = [];
 
   public name: string = "";
   public description: string = "";
@@ -57,6 +55,11 @@ export class CreatePageComponent {
   public programTypeInput$ = new Subject<string>();
   public selectedProgramTypes: CountItem[] = [];
 
+  public orgTypes$: Observable<CountItem[]>;
+  public orgTypesLoading = false;
+  public orgTypeInput$ = new Subject<string>();
+  public selectedOrgTypes: CountItem[] = [];
+
   public currencies: Currency[];
   public livingForms: CountItem[];
 
@@ -73,8 +76,9 @@ export class CreatePageComponent {
   public validateLanguages: string;
   public validateSubjects: string;
   public validateProgramTypes: string;
+  public validateOrgTypes: string;
 
-  public validateMessages: string[];
+  public validateMessages: string[] = [];
 
   constructor(private catalogService: CatalogService, private router: Router, private pageService: PageService) {
     // this.commonService.getCountries()
@@ -86,23 +90,17 @@ export class CreatePageComponent {
     //     }))
     //   .subscribe();
 
-    this.catalogService.getOrgTypes()
-      .subscribe((c: Catalog<CountItem>[]) => {
-        var items = c[0].items
-        this.orgtypes = this.convertCountItemsToFilterItem(items);
-        this.orgType = this.orgtypes[0];
-      });
-
     this.catalogService.getStudyTypes()
       .subscribe((c: Catalog<CountItem>[]) => {
         var items = c[0].items
-        this.studytypes = this.convertCountItemsToFilterItem(items);
+        this.studytypes = this.convertCountItemsToFilterItems(items);
       });
 
     this.loadEvents();
     this.loadLanguages();
     this.loadSubjects();
     this.loadProgramTypes();
+    this.loadOrgTypes();
 
     this.catalogService.getCurrencies()
       .subscribe(s => this.currencies = s);
@@ -116,19 +114,16 @@ export class CreatePageComponent {
     this.getCities(countryId).subscribe();
   }
 
-  public onChangeOrgType(event: any) {
-    var id = event.target.value;
-    if (id != 1004)
-      this.studyType = null;
-    else
+  public onChangeOrgType(event: CountItem[]) {
+    if (event.map(x => x.id).includes(1004))
       this.studyType = this.studytypes[0];
-
-    this.orgType = this.orgtypes.find(x => x.id == id);
+    else
+      this.studyType = null;
   }
 
   public onChangeStudyType(event: any) {
     var id = event.target.value;
-    this.studyType = this.studytypes.find(x => x.id == id);
+    this.studyType = this.studytypes?.find(x => x.id == id);
   }
 
   public onChangeProgram(event: CountItem[]) {
@@ -157,10 +152,10 @@ export class CreatePageComponent {
 
     switch (fieldName) {
       case "currency":
-        value = this.currencies.find(x => x.currency = value);
+        value = this.currencies?.find(x => x.currency == value);
         break;
       case "living":
-        value = this.livingForms.find(x => x.id = value);
+        value = this.livingForms?.find(x => x.id == value);
         break;
     }
 
@@ -174,7 +169,7 @@ export class CreatePageComponent {
     var date = newProgram.date[index];
     if (isNullOrUndefined(date.id))
       date.id = index + 1;
-    date[fieldName] = value + "T00:00:00.036";
+    date[fieldName] = value;
     newProgram.date[index] = date;
     this.newPrograms.set(programId, newProgram);
   }
@@ -187,40 +182,41 @@ export class CreatePageComponent {
     if (!this.validate()) {
       this.validateMessages.push("Please, fill in all required fields");
       return;
-    }
-    this.price()
-      .pipe(
-        mergeAll(),
-        map(_ => {
-          var p = {
-            name: this.name,
-            address: this.address,
-            description: this.description,
-            country: { id: 17, name: "Великобритания" } as Item,
-            city: { id: 252, name: "Лондон" } as Item,
-            location: { coordinates: [0, 0] } as Location,
-            contacts: {
-              email: this.email,
-              tel: this.tel,
-              site: this.site
-            } as Contacts,
-            orgtypes: [this.orgType],
-            studytypes: isNullOrUndefined(this.studyType) ? [] : [this.studyType],
-            founded: this.founded,
-            subjects: this.convertCountItemsToFilterItem(this.selectedSubjects),
-            language: this.convertCountItemsToFilterItem(this.selectedLanguages),
-            events: this.convertCountItemsToFilterItem(this.selectedEvents),
-            programs: this.getPrograms(),
-            images: [],
-            videos: [],
-            base_url: ""
-          } as Page;
+    } else {
+      this.price()
+        .pipe(
+          mergeAll(),
+          map(_ => {
+            var p = {
+              name: this.name,
+              address: this.address,
+              description: this.description,
+              country: { id: 17, name: "Великобритания" } as Item,
+              city: { id: 252, name: "Лондон" } as Item,
+              location: { coordinates: [0, 0] } as Location,
+              contacts: {
+                email: this.email,
+                tel: this.tel,
+                site: this.site
+              } as Contacts,
+              orgtypes: this.convertCountItemsToFilterItems(this.selectedOrgTypes),
+              studytypes: isNullOrUndefined(this.studyType) ? [] : [this.studyType],
+              founded: this.founded,
+              subjects: this.convertCountItemsToFilterItems(this.selectedSubjects),
+              language: this.convertCountItemsToFilterItems(this.selectedLanguages),
+              events: this.convertCountItemsToFilterItems(this.selectedEvents),
+              programs: this.getPrograms(),
+              images: [],
+              videos: [],
+              base_url: ""
+            } as Page;
 
-          return p;
-        }),
-        tap(s => console.log(s)),
-        switchMap(page => this.pageService.createPage(page)))
-      .subscribe(res => this.router.navigate(['/pages/page', res]));
+            return p;
+          }),
+          tap(s => console.log(s)),
+          switchMap(page => this.pageService.createPage(page)))
+        .subscribe(res => this.router.navigate(['/pages/page', res]));
+    }
   }
 
   public validateParam(programIs: number, paramName: string) {
@@ -339,6 +335,23 @@ export class CreatePageComponent {
     );
   }
 
+  private loadOrgTypes() {
+    this.orgTypes$ = concat(
+      this.catalogService.getOrgTypes(), // default items
+      this.orgTypeInput$.pipe(
+        distinctUntilChanged(),
+        tap(() => this.orgTypesLoading = true),
+        switchMap(term => this.orgTypes$.pipe(
+          catchError(() => of([])), // empty list on error
+          map((orgTypes: CountItem[]) => orgTypes.filter(x => x.name.includes(term))),
+          tap(s => {
+            this.orgTypesLoading = false;
+          })
+        ))
+      )
+    );
+  }
+
   private getCities(countryId: number): Observable<Catalog<CountItem>[]> {
     return this.catalogService.getCities(countryId)
       .pipe(tap((c: Catalog<CountItem>[]) => {
@@ -347,29 +360,37 @@ export class CreatePageComponent {
       }));
   }
 
-  private convertCountItemsToFilterItem(arr: CountItem[]): FilterItem[] {
-    var nerArr: FilterItem[] = [];
-    arr.forEach(e => nerArr.push({ id: e.id, name: e.name, filter: true } as FilterItem));
-    return nerArr;
+  private convertCountItemsToFilterItems(arr: CountItem[]): FilterItem[] {
+    var newArr: FilterItem[] = [];
+    arr.forEach(e => newArr.push({ id: e.id, name: e.name, filter: true } as FilterItem));
+    return newArr;
   }
 
   private getPrograms(): Program[] {
-    var nerArr: Program[] = [];
-    this.selectedProgramTypes.forEach(e => nerArr.push(this.createProgram(e)));
-    return nerArr;
+    var newArr: Program[] = [];
+    this.selectedProgramTypes.forEach(e => newArr.push(this.createProgram(e)));
+    return newArr;
   }
 
   private createProgram(program: CountItem): Program {
     var newProgram = this.newPrograms.get(program.id);
 
+    var date = [...newProgram?.date];
+    date.forEach(x => {
+      x.documents = x.documents + "T00:00:00.036";
+      x.enddate = x.enddate + "T00:00:00.036";
+      x.startdate = x.startdate + "T00:00:00.036";
+    });
+
     return {
       id: program.id,
       name: program.name,
-      price: newProgram.calcprice?.price,
+      price: newProgram?.calcprice?.price,
       age: this.getAge(newProgram),
-      date: newProgram.date,
+      date: date,
       living: newProgram?.living ?? this.livingForms[0],
-      period: newProgram?.period
+      period: newProgram?.period,
+      admission: newProgram?.admission
     } as Program;
   }
 
@@ -392,6 +413,7 @@ export class CreatePageComponent {
 
   private validate(): boolean {
     var valid: boolean[] = [];
+    this.validateMessages = [];
 
     if (typeof this.name != 'undefined' && this.name) {
       this.validateName = "";
@@ -417,12 +439,13 @@ export class CreatePageComponent {
     //   valid.push(false);
     // }
 
-    if (typeof this.email != 'undefined' && this.email
-      && emailExpression.test(this.email)) {
+    if (typeof this.email != 'undefined' && this.email) {
+      if (!emailExpression.test(this.email)) {
+        this.validateMessages.unshift("Wrong email format (mail@mail.com)");
+      }
       this.validateEmail = "";
       valid.push(true);
     } else {
-      this.validateMessage = "Wrong email format (mail@mail.com)";
       this.validateEmail = "validate-error";
       valid.push(false);
     }
@@ -464,6 +487,14 @@ export class CreatePageComponent {
       valid.push(true);
     } else {
       this.validateSubjects = "validate-error";
+      valid.push(false);
+    }
+
+    if (this.selectedOrgTypes?.length > 0) {
+      this.validateOrgTypes = "";
+      valid.push(true);
+    } else {
+      this.validateOrgTypes = "validate-error";
       valid.push(false);
     }
 
@@ -523,7 +554,15 @@ export class CreatePageComponent {
         valid.push(false);
       }
 
-      this.validateDate(np, vp);
+      if (typeof np?.admission != 'undefined' && np?.admission) {
+        this.addValid(vp, programId, "admission", "");
+        valid.push(true);
+      } else {
+        this.addValid(vp, programId, "admission", "validate-error");
+        valid.push(false);
+      }
+
+      valid.push(this.validateDate(np, vp));
     });
 
     return valid.reduce((sum, next) => sum && next, true);
@@ -535,29 +574,29 @@ export class CreatePageComponent {
     np.date.forEach((x, i) => {
       var date = vp.date[i] ?? new ValidateDate();
       if (typeof x?.startdate != 'undefined' && x?.startdate) {
-        if (x?.enddate < x?.startdate) {
-          vp.messages.push("Date to cannot be less than date from");
-          valid.push(false);
-          date["startdate"] = "validate-error";
-        } else {
-          date["startdate"] = "";
-          valid.push(true);
-        }
+        date["startdate"] = "";
+        valid.push(true);
       } else {
         date["startdate"] = "validate-error";
         valid.push(false);
       }
 
       if (typeof x?.enddate != 'undefined' && x?.enddate) {
-        date["enddate"] = "";
-        valid.push(true);
+        if (x?.enddate < x?.startdate) {
+          vp.messages.push("Date to cannot be less than date from");
+          valid.push(false);
+          date["enddate"] = "validate-error";
+        } else {
+          date["enddate"] = "";
+          valid.push(true);
+        }
       } else {
         date["enddate"] = "validate-error";
         valid.push(false);
       }
 
       if (typeof x?.documents != 'undefined' && x?.documents) {
-        if (x?.enddate < x?.startdate) {
+        if (x?.documents > x?.startdate) {
           vp.messages.push("Documents date cannot be greater than date from");
           valid.push(false);
           date["documents"] = "validate-error";

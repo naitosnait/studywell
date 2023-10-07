@@ -1,5 +1,9 @@
 import { UserResponse } from "app/models/response";
 import { RestService } from "./rest.service";
+import { Injectable } from '@angular/core';
+import { Observable } from "rxjs";
+import { User } from "app/models/user";
+import { map } from "rxjs/operators";
 
 @Injectable()
 export class UserService {

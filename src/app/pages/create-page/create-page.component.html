@@ -117,11 +117,21 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label>org type</label>
-                  <select name="select" class="form-select"
-                    (change)="onChangeOrgType($event)">
-                    <option *ngFor="let c of orgtypes" [value]="c.id">{{c.name}}</option>
-                  </select>
+                  <label>org types</label>
+                  <ng-select [items]="orgTypes$ | async"
+                    bindLabel="name"
+                    [multiple]="true"
+                    [hideSelected]="true"
+                    [trackByFn]="trackByFn"
+                    [minTermLength]="3"
+                    [loading]="orgTypesLoading"
+                    placeholder="Select orgTypes"
+                    typeToSearchText="Please enter 3 or more characters"
+                    [typeahead]="orgTypeInput$"
+                    (change)="onChangeOrgType($event)"
+                    [(ngModel)]="selectedOrgTypes"
+                    [ngClass]="validateOrgTypes">
+                  </ng-select>
                 </div>
               </div>
               <div class="col-md-6" *ngIf="studyType">
@@ -328,6 +338,18 @@
                   </div>
                 </div>
               </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+                    <label>admission</label>
+                    <textarea rows="5" class="form-control description"
+                      placeholder="admission"
+                      [ngClass]="validateParam(s.id, 'admission')"
+                      (change)="onChangeProgramParams($event, s.id, 'admission')"></textarea>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="row">
@@ -336,7 +358,7 @@
                   <label>description</label>
                   <textarea rows="5" class="form-control description"
                     placeholder="Here can be your description"
-                    [(ngModel)]="description">bla bla</textarea>
+                    [(ngModel)]="description"></textarea>
                 </div>
               </div>
             </div>

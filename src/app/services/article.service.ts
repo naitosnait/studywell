@@ -1,6 +1,7 @@
 import { Article } from "app/models/article";
 import { RestService } from "./rest.service";
 import { isNullOrUndefined } from "app/utils/utils";
+import { Injectable } from "@angular/core";
 
 @Injectable()
 export class ArticleService {

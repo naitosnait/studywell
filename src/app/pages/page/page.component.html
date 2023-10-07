@@ -122,9 +122,58 @@
             <div *ngFor="let p of page?.programs; let i=index">
               <div class="row">
                 <div class="col-md-12">
-                  <h3>{{p.name}} <b class="caret"></b></h3>
+                  <h5>{{p.name}} <b class="caret"></b></h5>
                   <div class="row">
+                    <div class="col-md-2">
+                      <label>documents date</label>
+                    </div>
+                    <div class="col-md-3" *ngFor="let d of p.date">
+                      <p>{{d?.documents | date :'dd.MM.yyyy'}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label>period</label>
+                    </div>
+                    <div class="col-md-3" *ngFor="let d of p.date">
+                      <p>{{d?.startdate | date :'dd.MM.yyyy'}} -
+                        {{d?.enddate | date :'dd.MM.yyyy'}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label>age</label>
+                    </div>
                     <div class="col-md-1">
+                      <p>{{convertAge(p.age)}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label>admission</label>
+                    </div>
+                    <div class="col-md-6">
+                      <p>{{p.admission}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label>original price</label>
+                    </div>
+                    <div class="col-md-2">
+                      <p>{{p.price?.original_price}} {{p.price?.original_currency}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2">
+                      <label>calculated price</label>
+                    </div>
+                    <div class="col-md-2">
+                      <p>{{p.price?.calc_price}} {{p.price?.calc_currency}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2">
                       <label>living</label>
                     </div>
                     <div class="col-md-2">
@@ -132,42 +181,11 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-1">
+                    <div class="col-md-2">
                       <label>period</label>
                     </div>
                     <div class="col-md-1">
                       <p>{{p.period}}</p>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-1">
-                      <label>price</label>
-                    </div>
-                    <div class="col-md-1">
-                      <p>{{p.price.original_price}}</p>
-                      <p>{{p.price?.original_currency}}</p>
-                      <p>{{p.price?.currency}}</p>
-                      <p>{{p.price?.calc_price}}</p>
-                      <p>{{p.price?.calc_currency}}</p>
-                      <p>{{p.price?.currency_c}}</p>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-1">
-                      <label>date</label>
-                    </div>
-                    <div class="col-md-3" *ngFor="let d of p.date">
-                      <p>{{d?.startdate | date :'dd.MM.yyyy'}} - {{d?.enddate |
-                        date :'dd.MM.yyyy'}}</p>
-                      <p>{{d?.documents | date :'dd.MM.yyyy'}}</p>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-1">
-                      <label>age</label>
-                    </div>
-                    <div class="col-md-1">
-                      <p>{{convertAge(p.age)}}</p>
                     </div>
                   </div>
                 </div>

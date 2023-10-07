@@ -60,6 +60,7 @@ export interface Program {
   price: Price;
   living: Item;
   period: string;
+  admission: string;
 }
 
 export interface Price {
@@ -122,6 +123,7 @@ export class NewProgram {
   calcprice?: any;
   living: Item;
   period: string;
+  admission: string;
 }
 
 export class ValidateProgram {
@@ -130,6 +132,7 @@ export class ValidateProgram {
   ageTo: string;
   price: string;
   period: string;
+  admission: string;
   messages: string[] = [];
 }
 
