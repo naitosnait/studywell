@@ -7,6 +7,7 @@ import { Observable, Subject, concat, from, of } from 'rxjs';
 import { PageService } from '../../services/page.service';
 import { Router } from '@angular/router';
 import { isNullOrUndefined } from 'app/utils/utils';
+import { emailExpression } from 'app/utils/consts';
 
 @Component({
   selector: 'create-page',
@@ -73,7 +74,7 @@ export class CreatePageComponent {
   public validateSubjects: string;
   public validateProgramTypes: string;
 
-  public validateMessage: string;
+  public validateMessages: string[];
 
   constructor(private catalogService: CatalogService, private router: Router, private pageService: PageService) {
     // this.commonService.getCountries()
@@ -184,7 +185,7 @@ export class CreatePageComponent {
 
   public createPage() {
     if (!this.validate()) {
-      this.validateMessage = "Please, fill in all required fields";
+      this.validateMessages.push("Please, fill in all required fields");
       return;
     }
     this.price()
@@ -354,11 +355,11 @@ export class CreatePageComponent {
 
   private getPrograms(): Program[] {
     var nerArr: Program[] = [];
-    this.selectedProgramTypes.forEach(e => nerArr.push(this.createNewProgram(e)));
+    this.selectedProgramTypes.forEach(e => nerArr.push(this.createProgram(e)));
     return nerArr;
   }
 
-  private createNewProgram(program: CountItem): Program {
+  private createProgram(program: CountItem): Program {
     var newProgram = this.newPrograms.get(program.id);
 
     return {
@@ -416,10 +417,12 @@ export class CreatePageComponent {
     //   valid.push(false);
     // }
 
-    if (typeof this.email != 'undefined' && this.email) {
+    if (typeof this.email != 'undefined' && this.email
+      && emailExpression.test(this.email)) {
       this.validateEmail = "";
       valid.push(true);
     } else {
+      this.validateMessage = "Wrong email format (mail@mail.com)";
       this.validateEmail = "validate-error";
       valid.push(false);
     }

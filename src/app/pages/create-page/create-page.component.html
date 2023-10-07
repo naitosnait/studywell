@@ -3,10 +3,13 @@
     <div class="row">
       <div class="col-md-12">
         <div class="card">
-          <ngb-alert *ngIf="validateMessage" type="danger"
-            (closed)="validateMessage = ''">
-            {{ validateMessage }}
-          </ngb-alert>
+          <div *ngFor="let vm of validateMessages; let i=index">
+            <ngb-alert
+              type="danger"
+              (closed)="validateMessages.splice(i, 1)">
+              {{ vm }}
+            </ngb-alert>
+          </div>
 
           <div class="header">
             <h4 class="title">Create page</h4>

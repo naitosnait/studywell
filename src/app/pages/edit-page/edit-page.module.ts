@@ -5,8 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { RouterModule } from '@angular/router';
 import { PageService } from '../../services/page.service';
-
-
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -17,7 +16,8 @@ import { PageService } from '../../services/page.service';
     FormsModule,
     RouterModule,
     ReactiveFormsModule,
-    NgSelectModule
+    NgSelectModule,
+    NgbAlertModule
   ],
   providers:[PageService]
 })

@@ -117,9 +117,9 @@ export class NewProgram {
   date: Date[] = [{} as Date];
   ageFrom: number;
   ageTo: number;
-  price: string;
+  price: number;
   currency: Currency;
-  calcprice: any;
+  calcprice?: any;
   living: Item;
   period: string;
 }
