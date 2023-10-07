@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UsersComponent } from './users.component';
+import { SuperUsersComponent } from './super-users.component';
 
 
 
 @NgModule({
   declarations: [
-    UsersComponent
+    SuperUsersComponent
   ],
   imports: [
     CommonModule
   ]
 })
-export class UsersModule { }
+export class SuperUsersModule { }

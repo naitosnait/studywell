@@ -188,6 +188,10 @@ export class EditPageComponent {
     return item.id;
   }
 
+  public cancel() {
+    this.router.navigate(['/pages/page', this.page.id]);
+  }
+
   public editPage() {
     if (!this.validate()) {
       this.validateMessages.push("Please, fill in all required fields");

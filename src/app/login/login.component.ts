@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
     public onSubmit() {
         this.authService.login(this.credentials).subscribe(_ => {
             if (this.authService.isLoggedIn) {
-                this.router.navigate(["/components/orgs"]);
+                this.router.navigate(["/pages/all"]);
             }
         });
     }

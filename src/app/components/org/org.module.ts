@@ -7,6 +7,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { RouterModule } from '@angular/router';
 import { SetPageComponent } from './set-page/set-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [OrgComponent, SetPageComponent],
@@ -15,7 +16,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     NgxPaginationModule,
     RouterModule,
-    NgbModule
+    NgbModule,
+    NgSelectModule
   ],
   providers: [OrgService],
   entryComponents: [SetPageComponent]

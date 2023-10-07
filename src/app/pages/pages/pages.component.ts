@@ -1,5 +1,5 @@
 import { CatalogService } from 'app/services/catalog.service';
-import { CountItem } from '../../models/page';
+import { PageInfo } from '../../models/page';
 import { SearchService } from '../../services/search.service';
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -19,7 +19,7 @@ export class PagesComponent {
 
   public showPaging = false;
 
-  public pages: Observable<CountItem[]>
+  public pages: Observable<PageInfo[]>
 
   constructor(private searchService: SearchService, private catalogService: CatalogService) {
     this.getPages(this.page);

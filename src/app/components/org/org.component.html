@@ -49,8 +49,8 @@
                     {{ p }}
                   </a></td>
                 <td>
-                  <p *ngFor="let amb of org.ambassadors">
-                    {{amb.name + ' ' + amb.surname}}</p>
+                  <span *ngFor="let amb of org.ambassadors">
+                    {{amb.name + ' ' + amb.surname}}</span>
                 </td>
                 <td>{{ org.photo}}</td>
                 <td>{{ org.tel}}</td>
@@ -62,7 +62,7 @@
                 <td>
                   <a rel="tooltip" title="Set page"
                     class="btn btn-success btn-simple btn-xs"
-                    (click)="setPage()">
+                    (click)="setPage(org.email)">
                     <i class="fa fa-plus"></i>
                   </a>
                   <a rel="tooltip" title="Remove page"
@@ -72,11 +72,13 @@
                 </td>
                 <td class="text-center">
                   <label class="toggle-switch">
-                    <input type="checkbox" [(ngModel)]="org.org_activate">
+                    <input type="checkbox" [(ngModel)]="org.org_activate"
+                      (change)="activate(org.email, org.org_activate)">
                     <div class="slider"></div>
                   </label>
                   <a rel="tooltip" title="Delete orgs"
-                    class="btn btn-danger btn-simple btn-xs">
+                    class="btn btn-danger btn-simple btn-xs"
+                    (click)="delete(org.email)">
                     <i class="fa fa-remove"></i>
                   </a>
                 </td>

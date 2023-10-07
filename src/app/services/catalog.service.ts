@@ -3,7 +3,7 @@ import { map } from 'rxjs/operators';
 
 import { Observable } from 'rxjs-compat';
 import { RestService } from './rest.service';
-import { Catalog, CountItem, Currency, Query } from 'app/models/page';
+import { Catalog, CountItem, Currency, PageInfo, Query } from 'app/models/page';
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +12,14 @@ export class CatalogService {
 
   constructor(private rest: RestService) { }
 
-  public catalog(page: number, size: number, search?: string): Observable<Catalog<CountItem>[]> {
+  public catalog(page: number, size: number, search?: string): Observable<Catalog<PageInfo>[]> {
     var url: string;
     if (typeof search != 'undefined' && search) {
       url = `/catalog/?page=${page}&size=${size}&search=${search}`;
     } else {
       url = `/catalog/?page=${page}&size=${size}`;
     }
-    return this.rest.get<Catalog<CountItem>[]>(url);
+    return this.rest.get<Catalog<PageInfo>[]>(url);
   }
 
   public getCountries(): Observable<Catalog<CountItem>[]> {

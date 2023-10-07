@@ -4,10 +4,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { SidebarModule } from './sidebar/sidebar.module';
 import { FooterModule } from './shared/footer/footer.module';
 import { NavbarModule } from './shared/navbar/navbar.module';
-import { PagesnavbarModule } from './shared/pagesnavbar/pagesnavbar.module';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { AppRoutes } from './app.routing';
@@ -20,6 +18,9 @@ import { PagesModule } from './pages/pages/pages.module';
 import { PageModule } from './pages/page/page.module';
 import { CreatePageModule } from './pages/create-page/create-page.module';
 import { EditPageModule } from './pages/edit-page/edit-page.module';
+import { UsersModule } from './components/users/users.module';
+import { SuperUsersModule } from './components/super-users/super-users.module';
+import { ArticlesModule } from './components/articles/articles.module';
 
 @NgModule({
   imports: [
@@ -28,11 +29,9 @@ import { EditPageModule } from './pages/edit-page/edit-page.module';
     RouterModule.forRoot(AppRoutes, {
       useHash: true
     }),
-    SidebarModule,
     NavbarModule,
     FooterModule,
     HttpClientModule,
-    PagesnavbarModule,
     ReactiveFormsModule,
     OrgModule,
     PagesModule,
@@ -40,7 +39,10 @@ import { EditPageModule } from './pages/edit-page/edit-page.module';
     CreatePageModule,
     EditPageModule,
     NgbModule,
-    NgSelectModule
+    NgSelectModule,
+    UsersModule,
+    SuperUsersModule,
+    ArticlesModule
   ],
   declarations: [
     AppComponent,

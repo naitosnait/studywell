@@ -219,6 +219,10 @@ export class CreatePageComponent {
     }
   }
 
+  public cancel() {
+    this.router.navigate(['/pages/all']);
+  }
+
   public validateParam(programIs: number, paramName: string) {
     var vp = this.validatePrograms.get(programIs);
     return typeof vp != 'undefined' && vp ? vp[paramName] : "";

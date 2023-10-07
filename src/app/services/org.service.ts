@@ -23,11 +23,11 @@ export class OrgService {
 
   public activateOrg(email: string, trigger: boolean): Observable<string> {
     var url = `/admin/org/activate?email=${email}&org_status=${trigger}`;
-    return this.rest.post<string>(url, {});
+    return this.rest.get<string>(url);
   }
 
   public setPageToOrg(pageId: number, email: string, trigger: boolean): Observable<string> {
-    var url = `/admin/org//set?page_id=${pageId}&email=${email}&set=${trigger}`;
-    return this.rest.post<string>(url, {});
+    var url = `/admin/org/set?page_id=${pageId}&email=${email}&set=${trigger}`;
+    return this.rest.get<string>(url);
   }
 }

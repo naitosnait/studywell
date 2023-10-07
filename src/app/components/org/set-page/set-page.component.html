@@ -1,17 +1,28 @@
 <div class="modal-header">
-  <h4 class="modal-title">Hi there!</h4>
+  <h4 class="modal-title">set page</h4>
   <button type="button" class="close" aria-label="Close"
     (click)="activeModal.dismiss('Cross click')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-  <p>Hello!</p>
+  <ng-select [items]="pages$ | async"
+    bindLabel="name"
+    [hideSelected]="true"
+    [trackByFn]="trackByFn"
+    [minTermLength]="3"
+    [loading]="pagesLoading"
+    placeholder="Select pages"
+    typeToSearchText="Please enter 3 or more characters"
+    [typeahead]="pageInput$"
+    (change)="onChangeProgram($event)"
+    [(ngModel)]="selectedPage">
+  </ng-select>
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark"
-    (click)="activeModal.close('Close click')">Set</button>
+  <button type="button" class="btn btn-outline-dark" [disabled]="disableSetButton"
+    (click)="setPage()">Set</button>
   <button type="button" class="btn btn-outline-dark"
     (click)="activeModal.close('Close click')">Close</button>
 </div>
