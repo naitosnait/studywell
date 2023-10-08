@@ -9,70 +9,78 @@
           <table class="table">
             <thead>
               <tr>
-                <th>orgname</th>
-                <th>shotname</th>
-                <th>description</th>
-                <th>INN</th>
-                <th>OGRN</th>
-                <th>address</th>
-                <th>factaddress</th>
-                <th>replies</th>
-                <th>page_ids</th>
-                <th>ambassadors</th>
-                <th>photo</th>
-                <th>tel</th>
-                <th>email</th>
-                <th>created_at</th>
-                <th>updated_at</th>
-                <th>page actions</th>
-                <th>orgs actions</th>
+                <th class="text-center">orgname</th>
+                <th class="text-center">shotname</th>
+                <th class="text-center">description</th>
+                <th class="text-center">INN</th>
+                <th class="text-center">OGRN</th>
+                <th class="text-center">address</th>
+                <th class="text-center">factaddress</th>
+                <th class="text-center">replies</th>
+                <th class="text-center">page_ids</th>
+                <th class="text-center">ambassadors</th>
+                <th class="text-center">photo</th>
+                <th class="text-center">tel</th>
+                <th class="text-center">email</th>
+                <th class="text-center">created_at</th>
+                <th class="text-center">updated_at</th>
+                <th class="text-center">page actions</th>
+                <th class="text-center">orgs actions</th>
               </tr>
             </thead>
             <tbody>
               <tr
                 *ngFor="let org of orgs | async | paginate: { itemsPerPage: size, currentPage: page, totalItems: totalItems }">
                 <td class="text-center">{{ org.orgname }}</td>
-                <td>{{ org.shotname}}</td>
-                <td>
+                <td class="text-center">{{ org.shotname}}</td>
+                <td class="text-center">
                   <span (click)="onClickShow()" class="show">Show</span>
                   <div class="description" *ngIf="showDescription">
                     <span>{{ org.description}}</span>
                   </div>
                 </td>
-                <td>{{ org.INN}}</td>
-                <td>{{ org.OGRN}}</td>
-                <td>{{ org.address}}</td>
-                <td>{{ org.factaddress}}</td>
-                <td><p *ngFor="let r of org.replies">{{ r }}</p></td>
-                <td><a *ngFor="let p of org.page_ids"
+                <td class="text-center">{{ org.INN}}</td>
+                <td class="text-center">{{ org.OGRN}}</td>
+                <td class="text-center">{{ org.address}}</td>
+                <td class="text-center">{{ org.factaddress}}</td>
+                <td class="text-center"><p *ngFor="let r of org.replies">{{ r }}</p></td>
+                <td class="text-center"><a *ngFor="let p of org.page_ids"
                     [routerLink]="['/pages/page', p]">
                     {{ p }}
-                  </a></td>
-                <td>
+                  </a>
+                </td>
+                <td class="text-center">
                   <span *ngFor="let amb of org.ambassadors">
                     {{amb.name + ' ' + amb.surname}}</span>
                 </td>
-                <td>{{ org.photo}}</td>
-                <td>{{ org.tel}}</td>
-                <td>{{ org.email}}</td>
-                <td>{{ org.created_at | date:'dd.MM.yyyy'}}<br />{{
-                  org.created_at | date:'HH:mm'}}</td>
-                <td>{{ org.updated_at | date:'dd.MM.yyyy'}}<br />{{
-                  org.updated_at | date:'HH:mm'}}</td>
-                <td>
+                <td class="text-center">{{ org.photo}}</td>
+                <td class="text-center">{{ org.tel}}</td>
+                <td class="text-center">{{ org.email}}</td>
+                <td class="text-center">
+                  {{ org.created_at | date:'dd.MM.yyyy'}}
+                  <br />
+                  {{ org.created_at | date:'HH:mm'}}
+                </td>
+                <td class="text-center">
+                  {{ org.updated_at | date:'dd.MM.yyyy'}}
+                  <br />
+                  {{ org.updated_at | date:'HH:mm'}}
+                </td>
+                <td class="text-center">
                   <a rel="tooltip" title="Set page"
                     class="btn btn-success btn-simple btn-xs"
                     (click)="setPage(org.email)">
                     <i class="fa fa-plus"></i>
                   </a>
-                  <a rel="tooltip" title="Remove page"
+                  <!-- <a rel="tooltip" title="Remove page"
                     class="btn btn-danger btn-simple btn-xs">
                     <i class="fa fa-minus"></i>
-                  </a>
+                  </a> -->
                 </td>
                 <td class="text-center">
                   <label class="toggle-switch">
-                    <input type="checkbox" [(ngModel)]="org.org_activate"
+                    <input *ngIf="hasPermission('orgs_ban')" type="checkbox"
+                      [(ngModel)]="org.org_activate"
                       (change)="activate(org.email, org.org_activate)">
                     <div class="slider"></div>
                   </label>

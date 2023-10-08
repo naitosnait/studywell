@@ -50,7 +50,7 @@ export class AdminLayoutComponent implements OnInit {
 
         this._router = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
         //   this.url = event.url;
-          this.navbar.sidebarClose();
+          // this.navbar.sidebarClose();
         });
 
         var isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;

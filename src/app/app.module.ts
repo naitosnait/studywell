@@ -10,7 +10,7 @@ import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { AppRoutes } from './app.routing';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 import { AuthService } from './services/auth.service';
 import { OrgModule } from './components/org/org.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -21,6 +21,8 @@ import { EditPageModule } from './pages/edit-page/edit-page.module';
 import { UsersModule } from './components/users/users.module';
 import { SuperUsersModule } from './components/super-users/super-users.module';
 import { ArticlesModule } from './components/articles/articles.module';
+import { PermissionsGuard } from './guards/permissions.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 @NgModule({
   imports: [
@@ -50,7 +52,7 @@ import { ArticlesModule } from './components/articles/articles.module';
     AuthLayoutComponent,
   ],
   bootstrap: [AppComponent],
-  providers: [AuthGuard, AuthService]
+  providers: [AuthGuard, AdminGuard, AuthService, PermissionsGuard]
 })
 
 export class AppModule { }

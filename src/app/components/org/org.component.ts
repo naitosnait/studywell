@@ -1,3 +1,4 @@
+import { AuthService } from 'app/services/auth.service';
 import { tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
@@ -5,6 +6,8 @@ import { Org } from '../../models/org';
 import { OrgService } from '../../services/org.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SetPageComponent } from './set-page/set-page.component';
+import { BaseComponent } from 'app/shared/base-component/base-component.component';
+import { Router } from '@angular/router';
 
 declare var $: any;
 
@@ -13,7 +16,7 @@ declare var $: any;
   templateUrl: './org.component.html',
   styleUrls: ['./org.component.css']
 })
-export class OrgComponent implements OnInit {
+export class OrgComponent extends BaseComponent {
 
   public orgs: Observable<Org[]>;
   public page = 1;
@@ -23,11 +26,11 @@ export class OrgComponent implements OnInit {
   public showDescription = false;
   public showPaging = false;
 
-  constructor(private orgService: OrgService, private modalService: NgbModal) {
+
+  constructor(private orgService: OrgService, private modalService: NgbModal, public authService: AuthService, public router: Router) {
+    super(authService, router);
     this.getOrgs(this.page);
   }
-
-  ngOnInit(): void { }
 
   public getOrgs(page: number) {
     this.orgs = this.orgService.getOrgs(page, this.size).pipe(

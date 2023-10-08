@@ -1,1 +1,169 @@
-<p>super-users works!</p>
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="card">
+        <div class="header">
+          <div class="row">
+            <div class="col">
+              <h4 class="title">Moderators</h4>
+            </div>
+            <div class="col">
+              <!-- <button type="button" class="btn btn-info btn-fill pull-right"
+                (click)="create()">Create Moderator</button> -->
+            </div>
+          </div>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center" rowspan="2">photo</th>
+                <th class="text-center" rowspan="2">username</th>
+                <th class="text-center" rowspan="2">email</th>
+                <th class="text-center" colspan="10">permissions</th>
+                <th class="text-center" rowspan="2">role</th>
+                <th class="text-center" rowspan="2">created_at</th>
+                <th class="text-center" rowspan="2">updated_at</th>
+                <th class="text-center" rowspan="2">edit permissions</th>
+                <th class="text-center" rowspan="2">actions</th>
+              </tr>
+              <tr>
+                <th>users_ban</th>
+                <th>orgs_ban</th>
+                <th>page_add</th>
+                <th>pages_edit</th>
+                <th>pages_delete</th>
+                <th>blog_add</th>
+                <th>blog_edit</th>
+                <th>blog_delete</th>
+                <th>usercomments_edit</th>
+                <th>usercomments_delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let user of superUsers">
+                <td class="text-center">{{user.photo}}</td>
+                <td class="text-center">{{user.username}}</td>
+                <td class="text-center">{{user.email}}</td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.users_ban">
+                  </label>
+                </td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.orgs_ban">
+                  </label>
+                </td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.page_add">
+                  </label>
+                </td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.pages_edit">
+                  </label>
+                </td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.pages_delete">
+                  </label>
+                </td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.blog_add">
+                  </label>
+                </td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.blog_edit">
+                  </label>
+                </td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.blog_delete">
+                  </label>
+                </td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.usercomments_edit">
+                  </label>
+                </td>
+                <td class="text-center">
+                  <label>
+                    <input [disabled]="getDisabledValue(user.username)"
+                      type="checkbox"
+                      [(ngModel)]="user.permissions.usercomments_delete">
+                  </label>
+                </td>
+                <td class="text-center">{{user.role}}</td>
+                <td class="text-center">
+                  {{ user.created_at | date:'dd.MM.yyyy'}}
+                  <br />
+                  {{ user.created_at | date:'HH:mm'}}
+                </td>
+                <td class="text-center">
+                  {{ user.updated_at | date:'dd.MM.yyyy'}}
+                  <br />
+                  {{ user.updated_at | date:'HH:mm'}}
+                </td>
+                <td class="text-center">
+                  <a *ngIf="getDisabledValue(user.username)" rel="tooltip"
+                    title="Edit"
+                    class="btn btn-success btn-simple btn-xs"
+                    (click)="chahgePermission(user.username)">
+                    <i class="fa fa-lock"></i>
+                  </a>
+                  <a *ngIf="!getDisabledValue(user.username)" rel="tooltip"
+                    title="Set page"
+                    class="btn btn-success btn-simple btn-xs"
+                    (click)="editPermissions(user.username)">
+                    <i class="fa fa-check"></i>
+                  </a>
+                  <a *ngIf="!getDisabledValue(user.username)" rel="tooltip"
+                    title="Remove page"
+                    class="btn btn-danger btn-simple btn-xs"
+                    (click)="cancel(user.username)">
+                    <i class="fa fa-times"></i>
+                  </a>
+                </td>
+                <td class="text-center">
+                  <a rel="tooltip" title="Edit"
+                    class="btn btn-success btn-simple btn-xs"
+                    (click)="edit(user.username)">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                  <a rel="tooltip" title="Delete"
+                    class="btn btn-danger btn-simple btn-xs"
+                    (click)="delete(user.username)">
+                    <i class="fa fa-remove"></i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

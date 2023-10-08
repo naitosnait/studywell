@@ -3,13 +3,15 @@ import { Routes } from '@angular/router';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 import { OrgComponent } from './components/org/org.component';
 import { CreatePageComponent } from './pages/create-page/create-page.component';
 import { PageComponent } from './pages/page/page.component';
 import { PagesComponent } from './pages/pages/pages.component';
 import { UsersComponent } from './components/users/users.component';
 import { SuperUsersComponent } from './components/super-users/super-users.component';
+import { PermissionsGuard } from './guards/permissions.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 export const AppRoutes: Routes = [{
     path: '',
@@ -18,8 +20,8 @@ export const AppRoutes: Routes = [{
 }, {
     path: '',
     component: AdminLayoutComponent,
-    // canActivate: [AuthGuard],
-    // canActivateChild: [AuthGuard],
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [{
         path: 'users',
         component: UsersComponent
@@ -29,23 +31,28 @@ export const AppRoutes: Routes = [{
         component: OrgComponent
     },
     {
-        path: 'super-users',
-        component: SuperUsersComponent
+        path: 'moderators',
+        component: SuperUsersComponent,
+        canActivate: [AdminGuard]
     }],
 }, {
     path: 'pages',
     component: AdminLayoutComponent,
-    // canActivate: [AuthGuard],
-    // canActivateChild: [AuthGuard],
+    canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
     children: [{
         path: 'create',
-        component: CreatePageComponent
+        component: CreatePageComponent,
+        canActivate: [PermissionsGuard],
+        data: {permission: 'page_add'}
     }, {
         path: 'page/:id',
         component: PageComponent
     }, {
         path: 'edit/:id',
-        component: EditPageComponent
+        component: EditPageComponent,
+        canActivate: [PermissionsGuard],
+        data: {permission: 'pages_edit'}
     }, {
         path: 'all',
         component: PagesComponent

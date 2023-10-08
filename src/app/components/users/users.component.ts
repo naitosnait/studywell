@@ -3,13 +3,16 @@ import { Observable } from 'rxjs';
 import { User } from 'app/models/user';
 import { UserService } from './../../services/user.service';
 import { Component } from '@angular/core';
+import { BaseComponent } from 'app/shared/base-component/base-component.component';
+import { AuthService } from 'app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
-export class UsersComponent {
+export class UsersComponent extends BaseComponent {
 
   public users: Observable<User[]>;
   public page = 1;
@@ -17,7 +20,9 @@ export class UsersComponent {
   public totalItems: number;
 
   public showPaging = false;
-  constructor(private userService: UserService) {
+
+  constructor(private userService: UserService, public authService: AuthService, public router: Router) {
+    super(authService, router);
     this.getUsers(this.page);
   }
 
@@ -34,7 +39,7 @@ export class UsersComponent {
       map(res => res.users));
   }
 
-  public banUser(userName: string, value: boolean){
+  public banUser(userName: string, value: boolean) {
     this.userService.userBan(userName, value).subscribe();
   }
 }

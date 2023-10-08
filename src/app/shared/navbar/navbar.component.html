@@ -19,6 +19,13 @@
             </p>
           </a>
         </li>
+        <li *ngIf="role == 'admin'">
+          <a [routerLink]="['/moderators']">
+            <p class>
+              Moderators
+            </p>
+          </a>
+        </li>
         <li>
           <a [routerLink]="['/pages/all']">
             <p class>
@@ -26,7 +33,7 @@
             </p>
           </a>
         </li>
-        <li>
+        <li *ngIf="hasPermission('page_add')">
           <a [routerLink]="['/pages/create']">
             <p class>
               Create page

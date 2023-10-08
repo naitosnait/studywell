@@ -2,6 +2,7 @@ import { Page } from "app/models/page";
 import { Org } from "./org";
 import { User } from "./user";
 import { ExistArticle } from "./article";
+import { ExistSuperUser } from "./admin";
 
 export interface PageResponse {
   status: string;
@@ -34,4 +35,14 @@ export interface UserResponse {
 export interface ArticleResponse {
   status: string
   article: ExistArticle[]
+}
+
+export interface ModeratorsListResponse {
+  status: string;
+  moderators: ExistSuperUser[];
+}
+
+export interface ProfileResponse {
+  status: string;
+  moderator: ExistSuperUser;
 }

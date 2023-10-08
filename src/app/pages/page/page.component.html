@@ -3,9 +3,9 @@
     <div class="row">
       <div class="col-md-6">
         <div class="profile-head">
-          <h3>
+          <h4>
             {{page.name}}
-          </h3>
+          </h4>
           <ngb-rating [(rate)]="page.rating" [readonly]="true" max="5">
           </ngb-rating>
           <!-- <h5>
@@ -14,9 +14,11 @@
         </div>
       </div>
       <div class="col-md-2">
-        <button type="button" class="profile-edit-btn" name="btnAddMore"
+        <button *ngIf="hasPermission('pages_edit')" type="button"
+          class="profile-edit-btn" name="btnAddMore"
           (click)="editPage()">Edit Page</button>
-        <button type="button" class="profile-edit-btn" name="btnAddMore"
+        <button *ngIf="hasPermission('pages_delete')" type="button"
+          class="profile-edit-btn" name="btnAddMore"
           (click)="deletePage()">Delete Page</button>
       </div>
     </div>
@@ -161,7 +163,8 @@
                       <label>original price</label>
                     </div>
                     <div class="col-md-2">
-                      <p>{{p.price?.original_price}} {{p.price?.original_currency}}</p>
+                      <p>{{p.price?.original_price}}
+                        {{p.price?.original_currency}}</p>
                     </div>
                   </div>
                   <div class="row">
