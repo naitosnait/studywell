@@ -1,3 +1,5 @@
+import { tap, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { Org } from '../../models/org';
 import { OrgService } from '../../services/org.service';
@@ -13,27 +15,40 @@ declare var $: any;
 })
 export class OrgComponent implements OnInit {
 
-  public orgs: Org[] = [];
+  public orgs: Observable<Org[]>;
   public page = 1;
   public size = 10;
+  public totalItems: number;
 
   public showDescription = false;
-
-  state_plain: boolean = true;
+  public showPaging = false;
 
   constructor(private orgService: OrgService, private modalService: NgbModal) {
-    this.orgService.getOrgs(this.page, this.size).subscribe(res => this.orgs = res);
+    this.getOrgs(this.page);
   }
 
   ngOnInit(): void { }
+
+  public getOrgs(page: number) {
+    this.orgs = this.orgService.getOrgs(page, this.size).pipe(
+      tap(res => {
+        this.showPaging = true;
+        this.totalItems = res.c_orgs;
+        // if(this.asyncIndex < 150){
+        //   this.asyncIndex += 10; // increment index to show total changing
+        // }
+        this.page = page;
+      }),
+      map(res => res.orgs));
+  }
 
   public onClickShow() {
     this.showDescription = !this.showDescription;
   }
 
   public setPage(email: string) {
-   var modal = this.modalService.open(SetPageComponent, { size: 'lg' });
-   modal.componentInstance.email = email;
+    var modal = this.modalService.open(SetPageComponent, { size: 'lg' });
+    modal.componentInstance.email = email;
   }
 
   public activate(email: string, value: boolean) {

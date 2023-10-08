@@ -16,11 +16,19 @@ export interface LoginResponse {
 export interface OrgResponse {
   status: string
   orgs: Org[]
+  c_orgs: number
+  page: number
+  size: number
+  pages: number
 }
 
 export interface UserResponse {
   status: string
   users: User[]
+  c_users: number
+  page: number
+  size: number
+  pages: number
 }
 
 export interface ArticleResponse {

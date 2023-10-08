@@ -3,7 +3,7 @@
     <div class="row">
       <div class="card">
         <div class="header">
-          <h4 class="title">Table with Links</h4>
+          <h4 class="title">Orgs</h4>
         </div>
         <div class="content table-responsive table-full-width">
           <table class="table">
@@ -30,7 +30,7 @@
             </thead>
             <tbody>
               <tr
-                *ngFor="let org of orgs | paginate: { itemsPerPage: size, currentPage: page }">
+                *ngFor="let org of orgs | async | paginate: { itemsPerPage: size, currentPage: page, totalItems: totalItems }">
                 <td class="text-center">{{ org.orgname }}</td>
                 <td>{{ org.shotname}}</td>
                 <td>
@@ -86,8 +86,8 @@
             </tbody>
           </table>
         </div>
-        <div>
-          <pagination-controls class="paging" (pageChange)="page = $event"></pagination-controls>
+        <div *ngIf="showPaging">
+          <pagination-controls class="paging" (pageChange)="getOrgs($event)"></pagination-controls>
         </div>
       </div>
     </div>

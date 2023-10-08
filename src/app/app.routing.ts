@@ -31,8 +31,7 @@ export const AppRoutes: Routes = [{
     {
         path: 'super-users',
         component: SuperUsersComponent
-    },
-  ],
+    }],
 }, {
     path: 'pages',
     component: AdminLayoutComponent,

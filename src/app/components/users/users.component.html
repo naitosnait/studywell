@@ -1,1 +1,57 @@
-<p>users works!</p>
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="card">
+        <div class="header">
+          <h4 class="title">Users</h4>
+        </div>
+        <div class="content table-responsive table-full-width">
+          <table class="table">
+            <thead>
+              <tr>
+                <td>photo</td>
+                <td>username</td>
+                <td>name</td>
+                <td>surname</td>
+                <td>address</td>
+                <td>comments</td>
+                <td>favs</td>
+                <td>email</td>
+                <td>tel</td>
+                <td>created_at</td>
+                <td>updated_at</td>
+                <td>ban</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let user of users | async | paginate: { itemsPerPage: size, currentPage: page, totalItems: totalItems }">
+                <td>{{user.photo}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.surname}}</td>
+                <td>{{user.address}}</td>
+                <td>{{user.comments}}</td>
+                <td>{{user.favs}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.tel}}</td>
+                <td>{{user.created_at | date:'dd.MM.yyyy'}}</td>
+                <td>{{user.updated_at | date:'dd.MM.yyyy'}}</td>
+                <td class="text-center">
+                  <label class="toggle-switch">
+                    <input type="checkbox" [(ngModel)]="user.ban"
+                      (change)="banUser(user.username, user.ban)">
+                    <div class="slider"></div>
+                  </label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="showPaging">
+          <pagination-controls class="paging" (pageChange)="getUsers($event)"></pagination-controls>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
