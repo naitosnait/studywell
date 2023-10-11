@@ -1,1 +1,55 @@
-<p>comments works!</p>
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="card">
+        <div class="header">
+          <h4 class="title">{{user}} comments</h4>
+        </div>
+        <div class="card comment-card bg-light"
+          *ngFor="let item of comments; let i = index">
+          <div
+            class="card-header border-0 bg-transparent d-flex align-items-center">
+            <div>
+              <span class="small text-muted">
+                {{item.updated_at | date:'dd.MM.yyyy HH:mm' ?? item.created_at |
+                date:'dd.MM.yyyy HH:mm'}}
+              </span>
+            </div>
+          </div>
+          <div class="card-body py-2 px-3">
+            <div *ngIf="!showEditor">
+              {{item.content}}
+            </div>
+            <textarea *ngIf="showEditor" rows="5"
+              class="form-control description"
+              [(ngModel)]="item.content"></textarea>
+          </div>
+          <div class="card-footer bg-light border-0 py-1 px-3"
+            *ngIf="!showEditor">
+            <button
+              type="button" (click)="showEditor = true"
+              class="btn btn-link btn-sm text-decoration-none">
+              Edit
+            </button>
+            <button type="button" (click)="delete(item.comment_id, i)"
+              class="btn btn-link btn-sm text-decoration-none">
+              Delete
+            </button>
+          </div>
+          <div class="card-footer bg-light border-0 py-1 px-3"
+            *ngIf="showEditor">
+            <button
+              type="button" (click)="edit(i)"
+              class="btn btn-link btn-sm text-decoration-none">
+              Save
+            </button>
+            <button type="button" (click)="showEditor = false"
+              class="btn btn-link btn-sm text-decoration-none">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

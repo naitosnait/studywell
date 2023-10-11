@@ -23,6 +23,7 @@ import { SuperUsersModule } from './components/super-users/super-users.module';
 import { ArticlesModule } from './components/articles/articles.module';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { CommentsModule } from './components/comments/comments.module';
 
 @NgModule({
   imports: [
@@ -44,7 +45,8 @@ import { AdminGuard } from './guards/admin.guard';
     NgSelectModule,
     UsersModule,
     SuperUsersModule,
-    ArticlesModule
+    ArticlesModule,
+    CommentsModule
   ],
   declarations: [
     AppComponent,

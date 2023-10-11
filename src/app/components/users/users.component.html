@@ -15,7 +15,6 @@
                 <th class="text-center">surname</th>
                 <th class="text-center">address</th>
                 <th class="text-center">comments</th>
-                <th class="text-center">favs</th>
                 <th class="text-center">email</th>
                 <th class="text-center">tel</th>
                 <th class="text-center">created_at</th>
@@ -31,8 +30,9 @@
                 <td class="text-center">{{user.name}}</td>
                 <td class="text-center">{{user.surname}}</td>
                 <td class="text-center">{{user.address}}</td>
-                <td class="text-center">{{user.comments}}</td>
-                <td class="text-center">{{user.favs}}</td>
+                <td class="text-center">
+                  <a *ngIf="user.comments?.length > 0" [routerLink]="['/comments', user.username]">show</a>
+                </td>
                 <td class="text-center">{{user.email}}</td>
                 <td class="text-center">{{user.tel}}</td>
                 <td class="text-center">

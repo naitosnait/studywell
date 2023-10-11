@@ -47,7 +47,7 @@
 /** ALL Firefox browsers require the following to support `@angular/animation`. **/
 // import 'web-animations-js';  // Run `npm install --save web-animations-js`.
 
-
+import { smoothscroll } from 'smoothscroll-polyfill/dist/smoothscroll';
 
 /***************************************************************************************************
  * Zone JS is required by Angular itself.
@@ -66,3 +66,5 @@ import '@angular/localize/init';
  */
 // import 'intl';  // Run `npm install --save intl`.
 (window as any)['global'] = window;
+
+smoothscroll.polyfill();

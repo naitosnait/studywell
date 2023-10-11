@@ -12,6 +12,7 @@ import { UsersComponent } from './components/users/users.component';
 import { SuperUsersComponent } from './components/super-users/super-users.component';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { CommentsComponent } from './components/comments/comments.component';
 
 export const AppRoutes: Routes = [{
     path: '',
@@ -34,7 +35,12 @@ export const AppRoutes: Routes = [{
         path: 'moderators',
         component: SuperUsersComponent,
         canActivate: [AdminGuard]
-    }],
+    },
+    {
+      path: 'comments/:userName',
+      component: CommentsComponent,
+    }
+  ],
 }, {
     path: 'pages',
     component: AdminLayoutComponent,

@@ -1,0 +1,9 @@
+.comment-card {
+  width: 600px;
+  margin: 20px;
+  padding: 10px;
+}
+
+.description {
+  min-height: calc(3.5em + 5.75rem + 2px);
+}

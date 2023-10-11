@@ -29,7 +29,6 @@ export class AuthService {
         tap(res => {
           if (!isNullOrUndefined(res))
             this.profile = res.moderator;
-          console.log(this.profile);
         })
       );
   }

@@ -213,7 +213,6 @@ export class CreatePageComponent {
 
             return p;
           }),
-          tap(s => console.log(s)),
           switchMap(page => this.pageService.createPage(page)))
         .subscribe(res => this.router.navigate(['/pages/page', res]));
     }
@@ -282,7 +281,6 @@ export class CreatePageComponent {
           catchError(() => of([])), // empty list on error
           tap(s => {
             this.eventsLoading = false;
-            console.log(this.selectedEvents);
           })
         ))
       )
@@ -299,7 +297,6 @@ export class CreatePageComponent {
           catchError(() => of([])), // empty list on error
           tap(s => {
             this.languagesLoading = false;
-            console.log(this.selectedLanguages);
           })
         ))
       )
@@ -316,7 +313,6 @@ export class CreatePageComponent {
           catchError(() => of([])), // empty list on error
           tap(s => {
             this.subjectsLoading = false;
-            console.log(this.selectedSubjects);
           })
         ))
       )

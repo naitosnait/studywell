@@ -7,8 +7,6 @@ export abstract class BaseComponent {
 
   constructor(public authService: AuthService, public router: Router) {
     this.role = this.authService.getRole();
-    if (!this.authService.isLoggedIn)
-      this.router.navigate(['/login']);
   }
 
   public hasPermission(name: string): boolean {

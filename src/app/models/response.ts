@@ -3,6 +3,7 @@ import { Org } from "./org";
 import { User } from "./user";
 import { ExistArticle } from "./article";
 import { ExistSuperUser } from "./admin";
+import { Comment } from "./comment";
 
 export interface PageResponse {
   status: string;
@@ -45,4 +46,12 @@ export interface ModeratorsListResponse {
 export interface ProfileResponse {
   status: string;
   moderator: ExistSuperUser;
+}
+
+export interface CommentResponse{
+    comments: Comment[]
+    c_comments: number
+    page: number
+    size: number
+    pages: number
 }

@@ -50,6 +50,5 @@ export class LoginComponent implements OnInit {
     }
 
     public emailChange(value) {
-        console.log(value);
     }
 }

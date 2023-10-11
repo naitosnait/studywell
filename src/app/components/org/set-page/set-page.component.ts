@@ -27,7 +27,6 @@ export class SetPageComponent implements OnInit {
     private orgService: OrgService) { }
 
   ngOnInit() {
-    console.log(this.email);
     this.loadPages();
   }
 
