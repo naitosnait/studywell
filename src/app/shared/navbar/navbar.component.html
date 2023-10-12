@@ -1,103 +1,56 @@
-<nav #navbar class="navbar navbar-default">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand">StudyWell</a>
-    </div>
-    <div class="navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li>
-          <a [routerLink]="['/orgs']">
-            <p class>
-              Orgs
-            </p>
-          </a>
+    <a class="navbar-brand" href="#">StudyWell</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page"
+            [routerLink]="['/orgs']">Orgs</a>
         </li>
-        <li>
-          <a [routerLink]="['/users']">
-            <p class>
-              Users
-            </p>
-          </a>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/users']">Users</a>
         </li>
-        <li *ngIf="role == 'admin'">
-          <a [routerLink]="['/moderators']">
-            <p class>
-              Moderators
-            </p>
-          </a>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/moderators']">Moderators</a>
         </li>
-        <li>
-          <a [routerLink]="['/pages/all']">
-            <p class>
-              Pages
-            </p>
+        <li class="nav-item"><a class="nav-link" [routerLink]="['/pages/all']">Pages</a></li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/pages/create']">
+            Create page
           </a>
-        </li>
-        <li *ngIf="hasPermission('page_add')">
-          <a [routerLink]="['/pages/create']">
-            <p class>
-              Create page
-            </p>
+          <!-- <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Pages
           </a>
-        </li>
-        <li>
-          <a href="#" class="text-danger"
-            (click)="logout()">
-            <i class="pe-7s-close-circle"></i>
-            Log out
-          </a>
-        </li>
-
-        <!-- <li class="dropdown dropdown-with-icons">
-          <a href="#" class="dropdown-toggle"
-            data-toggle="dropdown">
-            <p class>
-              Pages
-              <b class="caret"></b>
-            </p>
-          </a>
-          <ul class="dropdown-menu dropdown-with-icons">
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" [routerLink]="['/pages/all']">All</a></li>
             <li>
-              <li>
-                <a href="#" class="text-danger">
-                  <i class="pe-7s-close-circle"></i>
-                  Show all
-                </a>
-                <a [routerLink]="['/pages/create']" class="text-danger">
-                  <i class="pe-7s-close-circle"></i>
-                  Create
-                </a>
-              </li>
-            </ul>
-          </li>-->
-      </ul>
-
-      <!-- <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown dropdown-with-icons">
-          <a href="#" class="dropdown-toggle"
-            data-toggle="dropdown">
-            <i class="fa fa-list"></i>
-            <p class="hidden-md hidden-lg">
-              More
-              <b class="caret"></b>
-            </p>
-          </a>
-          <ul class="dropdown-menu dropdown-with-icons">
-            <li>
-              <li>
-                <a href="#" class="text-danger">
-                  <i class="pe-7s-close-circle"></i>
-                  My profile
-                </a>
-                <a href="#" class="text-danger"
-                  (click)="logout()">
-                  <i class="pe-7s-close-circle"></i>
-                  Log out
-                </a>
-              </li>
-            </ul>
+              <a class="dropdown-item" [routerLink]="['/pages/create']">
+                Create page
+              </a>
+            </li> -->
+          <!-- <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+          <!-- </ul>
+        </li> -->
+        </ul>
+      </div>
+      <div>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item pull-right">
+            <a class="nav-link" href="#" (click)="logout()">
+              <i class="pe-7s-close-circle"></i>
+              LogOut
+            </a>
           </li>
-        </ul> -->
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>

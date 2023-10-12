@@ -25,7 +25,6 @@
                             "src/assets/css/pe-icon-7-stroke.css",
                             "node_modules/bootstrap/dist/css/bootstrap.min.css",
                             "src/assets/css/demo.css",
-                            "node_modules/bootstrap/dist/css/bootstrap.min.css",
                             "node_modules/@ng-select/ng-select/themes/default.theme.css"
                         ],
                         "scripts": [
@@ -45,7 +44,10 @@
                             "node_modules/sweetalert2/dist/sweetalert2.js",
                             "node_modules/jasny-bootstrap/dist/js/jasny-bootstrap.min.js",
                             "node_modules/jquery-validation/dist/jquery.validate.min.js",
-                            "node_modules/smoothscroll-polyfill/dist/smoothscroll.js"
+                            "node_modules/smoothscroll-polyfill/dist/smoothscroll.js",
+                            "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+                            "node_modules/bootstrap/dist/js/bootstrap.min.js",
+                            "node_modules/popper.js/dist/umd/popper.min.js"
                         ]
                     },
                     "configurations": {
@@ -127,9 +129,15 @@
                             "node_modules/sweetalert2/dist/sweetalert2.js",
                             "node_modules/jasny-bootstrap/dist/js/jasny-bootstrap.min.js",
                             "node_modules/jquery-validation/dist/jquery.validate.min.js",
-                            "node_modules/smoothscroll-polyfill/dist/smoothscroll.js"
+                            "node_modules/smoothscroll-polyfill/dist/smoothscroll.js",
+                            "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+                            "node_modules/bootstrap/dist/js/bootstrap.min.js",
+                            "node_modules/popper.js/dist/umd/popper.min.js"
                         ],
-                        "styles": ["src/assets/sass/light-bootstrap-dashboard.scss"],
+                        "styles": [
+                          "src/assets/sass/light-bootstrap-dashboard.scss",
+                          "node_modules/bootstrap/dist/css/bootstrap.min.css"
+                        ],
                         "assets": ["src/assets", "src/favicon.ico"]
                     }
                 },

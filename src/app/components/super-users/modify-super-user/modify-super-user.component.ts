@@ -1,22 +1,24 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CreateSuperUser, ModifySuperUser, Permissions } from 'app/models/admin';
 import { ModifyType, SuperUserType } from 'app/models/enums';
 import { AdminService } from 'app/services/admin.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
+import { emailExpression } from 'app/utils/consts';
 
 @Component({
   selector: 'modify-super-user',
   templateUrl: './modify-super-user.component.html',
   styleUrls: ['./modify-super-user.component.css']
 })
-export class ModifySuperUserComponent {
+export class ModifySuperUserComponent implements OnInit {
 
   @Input() modifyType: ModifyType;
   @Input() superUserType: SuperUserType;
   @Input() superUser: ModifySuperUser;
 
   createType = ModifyType.Create;
+  admintype = SuperUserType.Admin;
 
   username: string = "";
   email: string = "";
@@ -39,11 +41,13 @@ export class ModifySuperUserComponent {
   } as Permissions;
 
   validPassword: string = "";
-  passwordError: string = "";
+  validConfirmPassword: string = "";
 
-  constructor(public activeModal: NgbActiveModal, private adminService: AdminService) {
-console.log(this.modifyType);
+  validateMessages: string[] = [];
 
+  constructor(public activeModal: NgbActiveModal, private adminService: AdminService) { }
+
+  ngOnInit(): void {
     if (this.modifyType !== this.createType) {
       this.username = this.superUser?.username;
       this.email = this.superUser?.email;
@@ -52,21 +56,28 @@ console.log(this.modifyType);
   }
 
   public save() {
-    this.modify().subscribe(() => this.activeModal.close('Close click'));
+    if (this.validate())
+      this.modify().subscribe(() => this.activeModal.close('Close click'));
   }
 
-  public isNullOrUndefined(value: any) {
-    console.log(value);
-    return this.isNullOrUndefined(value);
-  }
+  public validate(): boolean {
+    this.validateMessages = [];
+    this.validPassword = this.validConfirmPassword = "";
 
-  public validatePassword() {
-    if (this.password != this.passwordConfirm) {
-      this.validPassword = "validate-error";
-      this.passwordError = "Passwords don't match";
-      return this.validPassword;
+    if (!emailExpression.test(this.email)) {
+      this.validateMessages.unshift("Wrong email format (mail@mail.com)");
     }
-    return "";
+
+    if (this.password.length < 8) {
+      this.validateMessages.push("Password could not be less than 8 characters");
+    }
+
+    if (this.password != this.passwordConfirm) {
+      this.validPassword = this.validConfirmPassword = "validate-error";
+      this.validateMessages.push("Passwords don't match");
+    }
+
+    return this.validateMessages.length > 0;
   }
 
   private modify(): Observable<any> {

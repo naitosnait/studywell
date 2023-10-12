@@ -1,5 +1,5 @@
 import { Credentials } from '../models/login';
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -16,6 +16,8 @@ export class LoginComponent implements OnInit {
     public credentials: Credentials;;
 
     constructor(private authService: AuthService, private router: Router) {
+        this.redirectToPages();
+
         this.credentials = {
             email: "",
             password: ""
@@ -44,11 +46,17 @@ export class LoginComponent implements OnInit {
     public onSubmit() {
         this.authService.login(this.credentials).subscribe(_ => {
             if (this.authService.isLoggedIn) {
-                this.router.navigate(["/pages/all"]);
+                this.redirectToPages();
             }
         });
     }
 
     public emailChange(value) {
+    }
+
+    private redirectToPages() {
+        if (this.authService.isLoggedIn) {
+            this.router.navigate(["/pages/all"]);
+        }
     }
 }

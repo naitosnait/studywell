@@ -1,9 +1,9 @@
 export enum ModifyType {
-    Create,
-    Edit
+    Create = 1,
+    Edit = 2
 }
 
 export enum SuperUserType {
-    Admin,
-    Moderator
+    Admin = 1,
+    Moderator = 2
 }

@@ -46,7 +46,7 @@
                 <td class="text-center"><p *ngFor="let r of org.replies">{{ r }}</p></td>
                 <td class="text-center"><a *ngFor="let p of org.page_ids"
                     [routerLink]="['/pages/page', p]">
-                    {{ p }}
+                    <p> {{ p }} </p>
                   </a>
                 </td>
                 <td class="text-center">

@@ -16,9 +16,8 @@ import { CommentsComponent } from './components/comments/comments.component';
 
 export const AppRoutes: Routes = [{
     path: '',
-    redirectTo: 'login',
-    pathMatch: 'full',
-}, {
+    redirectTo: 'login'
+  }, {
     path: '',
     component: AdminLayoutComponent,
     canActivate: [AuthGuard],
