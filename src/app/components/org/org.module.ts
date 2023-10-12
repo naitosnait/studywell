@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { SetPageComponent } from './set-page/set-page.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [OrgComponent, SetPageComponent],
@@ -17,7 +18,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     NgxPaginationModule,
     RouterModule,
     NgbModule,
-    NgSelectModule
+    NgSelectModule,
+    NgbAlertModule
   ],
   providers: [OrgService],
   entryComponents: [SetPageComponent]

@@ -52,9 +52,7 @@ export class SetPageComponent implements OnInit {
         switchMap(term => this.catalogService.catalog(1, 10, term).pipe(
           catchError(() => of([])), // empty list on error
           map(res => res[0].items),
-          tap(s => {
-            this.pagesLoading = false;
-          })
+          tap(this.pagesLoading = false)
         ))
       )
     );

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CommentResponse } from 'app/models/response';
 import { RestService } from './rest.service';
-import { Comment, ModifyComment } from 'app/models/comment';
+import { ModifyComment } from 'app/models/comment';
 
 @Injectable()
 export class CommentsService {

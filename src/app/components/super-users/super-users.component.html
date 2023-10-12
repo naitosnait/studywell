@@ -8,8 +8,12 @@
               <h4 class="title">Moderators</h4>
             </div>
             <div class="col">
-              <!-- <button type="button" class="btn btn-info btn-fill pull-right"
-                (click)="create()">Create Moderator</button> -->
+              <button type="button" class="btn btn-info btn-fill pull-right"
+                (click)="createModerator()">Create Moderator</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-info btn-fill pull-right"
+                (click)="createAdmin()">Create Admin</button>
             </div>
           </div>
         </div>
@@ -135,13 +139,13 @@
                     <i class="fa fa-lock"></i>
                   </a>
                   <a *ngIf="!getDisabledValue(user.username)" rel="tooltip"
-                    title="Set page"
+                    title="Save"
                     class="btn btn-success btn-simple btn-xs"
                     (click)="editPermissions(user.username)">
                     <i class="fa fa-check"></i>
                   </a>
                   <a *ngIf="!getDisabledValue(user.username)" rel="tooltip"
-                    title="Remove page"
+                    title="Cancel"
                     class="btn btn-danger btn-simple btn-xs"
                     (click)="cancel(user.username)">
                     <i class="fa fa-times"></i>
@@ -150,7 +154,7 @@
                 <td class="text-center">
                   <a rel="tooltip" title="Edit"
                     class="btn btn-success btn-simple btn-xs"
-                    (click)="edit(user.username)">
+                    (click)="editModerator(user)">
                     <i class="fa fa-edit"></i>
                   </a>
                   <a rel="tooltip" title="Delete"

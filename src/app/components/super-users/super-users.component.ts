@@ -1,10 +1,13 @@
 import { AuthService } from 'app/services/auth.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { ExistSuperUser, Permissions } from 'app/models/admin';
+import { ExistSuperUser, ModifySuperUser, Permissions } from 'app/models/admin';
 import { AdminService } from 'app/services/admin.service';
 import { BaseComponent } from 'app/shared/base-component/base-component.component';
 import { tap } from 'rxjs/operators';
+import { ModifySuperUserComponent } from './modify-super-user/modify-super-user.component';
+import { ModifyType, SuperUserType } from 'app/models/enums';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'super-users',
@@ -19,7 +22,7 @@ export class SuperUsersComponent extends BaseComponent {
 
   public disabled: Map<string, boolean> = new Map<string, boolean>();
 
-  constructor(private adminService: AdminService, public authService: AuthService, public router: Router) {
+  constructor(private modalService: NgbModal, private adminService: AdminService, public authService: AuthService, public router: Router) {
     super(authService, router);
     this.getSuperUsers();
   }
@@ -51,12 +54,28 @@ export class SuperUsersComponent extends BaseComponent {
     this.disabled.set(userName, true);
   }
 
-  public create() {
-
+  public createModerator() {
+    var modal = this.modalService.open(ModifySuperUserComponent, { size: 'lg' });
+    modal.componentInstance.modifyType = ModifyType.Create;
+    modal.componentInstance.superUserType = SuperUserType.Moderator;
   }
 
-  public edit(userName: string) {
+  public createAdmin() {
+    var modal = this.modalService.open(ModifySuperUserComponent, { size: 'lg' });
+    modal.componentInstance.modifyType = ModifyType.Create;
+    modal.componentInstance.superUserType = SuperUserType.Admin;
+  }
 
+  public editModerator(user: ExistSuperUser) {
+    var modify = {
+      email: user.email,
+      username: user.username,
+      photo: user.photo
+    } as ModifySuperUser;
+    var modal = this.modalService.open(ModifySuperUserComponent, { size: 'lg' });
+    modal.componentInstance.modifyType = ModifyType.Edit;
+    modal.componentInstance.superUserType = SuperUserType.Moderator;
+    modal.componentInstance.superUser = modify;
   }
 
   public delete(userName: string) {

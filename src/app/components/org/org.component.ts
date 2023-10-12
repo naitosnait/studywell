@@ -1,7 +1,7 @@
 import { AuthService } from 'app/services/auth.service';
 import { tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Org } from '../../models/org';
 import { OrgService } from '../../services/org.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
