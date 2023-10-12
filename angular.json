@@ -134,10 +134,7 @@
                             "node_modules/bootstrap/dist/js/bootstrap.min.js",
                             "node_modules/popper.js/dist/umd/popper.min.js"
                         ],
-                        "styles": [
-                          "src/assets/sass/light-bootstrap-dashboard.scss",
-                          "node_modules/bootstrap/dist/css/bootstrap.min.css"
-                        ],
+                        "styles": ["src/assets/sass/light-bootstrap-dashboard.scss"],
                         "assets": ["src/assets", "src/favicon.ico"]
                     }
                 },
