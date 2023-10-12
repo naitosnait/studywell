@@ -42,10 +42,12 @@ export class ModifySuperUserComponent {
   passwordError: string = "";
 
   constructor(public activeModal: NgbActiveModal, private adminService: AdminService) {
-    if (this.modifyType != this.createType) {
-      this.username = this.superUser.username;
-      this.email = this.superUser.email;
-      this.photo = this.superUser.photo;
+console.log(this.modifyType);
+
+    if (this.modifyType !== this.createType) {
+      this.username = this.superUser?.username;
+      this.email = this.superUser?.email;
+      this.photo = this.superUser?.photo;
     }
   }
 
@@ -54,6 +56,7 @@ export class ModifySuperUserComponent {
   }
 
   public isNullOrUndefined(value: any) {
+    console.log(value);
     return this.isNullOrUndefined(value);
   }
 

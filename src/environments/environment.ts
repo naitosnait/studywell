@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'https://b9e48c06433b.vps.myjino.ru'
+  apiUrl: 'http://admin.visce.stream'
 };

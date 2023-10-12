@@ -1,118 +1,125 @@
 <div class="modal-header">
-    <h4 class="modal-title">{{modifyType == createType ? "Create" : "Edit"}} super user</h4>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-    </button>
+  <h4 class="modal-title">{{modifyType == createType ? "Create" : "Edit"}} super
+    user</h4>
+  <button type="button" class="close" aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 
 <div class="modal-body">
-    <div class="content">
-        <div *ngIf="passwordError">
-            <ngb-alert type="danger" (closed)="passwordError = ''">
-                {{ passwordError }}
-            </ngb-alert>
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>username</label>
-                    <input type="text" class="form-control" placeholder="username"
-                        [ngClass]="isNullOrUndefined(username) ? 'validate-error' : '" [(ngModel)]="username">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>email</label>
-                    <input type="text" class="form-control" placeholder="email" [(ngModel)]="email">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>password</label>
-                    <input type="password" class="form-control" placeholder="password" [(ngModel)]="password"
-                        [ngClass]="validatePassword()">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label>passwordConfirm</label>
-                    <input type="password" class="form-control" placeholder="passwordConfirm"
-                        [(ngModel)]="passwordConfirm" [ngClass]="validPassword">
-                </div>
-            </div>
-        </div>
-        <div class="row" *ngIf="modifyType == createType">
-            <div class="col-md-3">
-                <label class="toggle-switch">
-                    users_ban
-                    <input type="checkbox" [(ngModel)]="permissions.users_ban"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-                <label class="toggle-switch">
-                    orgs_ban
-                    <input type="checkbox" [(ngModel)]="permissions.orgs_ban"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-                <label class="toggle-switch">
-                    page_add
-                    <input type="checkbox" [(ngModel)]="permissions.page_add"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-                <label class="toggle-switch">
-                    pages_edit
-                    <input type="checkbox" [(ngModel)]="permissions.pages_edit"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-                <label class="toggle-switch">
-                    pages_delete
-                    <input type="checkbox" [(ngModel)]="permissions.pages_delete"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-            </div>
-            <div class="col-md-3">
-                <label class="toggle-switch">
-                    blog_add
-                    <input type="checkbox" [(ngModel)]="permissions.blog_add"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-                <label class="toggle-switch">
-                    blog_edit
-                    <input type="checkbox" [(ngModel)]="permissions.blog_edit"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-                <label class="toggle-switch">
-                    blog_delete
-                    <input type="checkbox" [(ngModel)]="permissions.blog_delete"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-                <label class="toggle-switch">
-                    usercomments_edit
-                    <input type="checkbox" [(ngModel)]="permissions.usercomments_edit"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-                <label class="toggle-switch">
-                    usercomments_delete
-                    <input type="checkbox" [(ngModel)]="permissions.usercomments_delete"
-                        (change)="banUser(user.username, user.ban)">
-                    <div class="slider"></div>
-                </label>
-            </div>
-        </div>
+  <div class="content">
+    <div *ngIf="passwordError">
+      <ngb-alert type="danger" (closed)="passwordError = ''">
+        {{ passwordError }}
+      </ngb-alert>
     </div>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>username</label>
+          <input type="text" class="form-control" placeholder="username"
+            [ngClass]="isNullOrUndefined(username) ? 'validate-error' : ''"
+            [(ngModel)]="username">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>email</label>
+          <input type="text" class="form-control" placeholder="email"
+            [(ngModel)]="email">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>password</label>
+          <input type="password" class="form-control" placeholder="password"
+            [(ngModel)]="password"
+            [ngClass]="validatePassword()">
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label>passwordConfirm</label>
+          <input type="password" class="form-control"
+            placeholder="passwordConfirm"
+            [(ngModel)]="passwordConfirm" [ngClass]="validPassword">
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="modifyType == createType">
+      <div class="col-md-3">
+        <label class="toggle-switch">
+          users_ban
+          <input type="checkbox" [(ngModel)]="permissions.users_ban"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+        <label class="toggle-switch">
+          orgs_ban
+          <input type="checkbox" [(ngModel)]="permissions.orgs_ban"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+        <label class="toggle-switch">
+          page_add
+          <input type="checkbox" [(ngModel)]="permissions.page_add"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+        <label class="toggle-switch">
+          pages_edit
+          <input type="checkbox" [(ngModel)]="permissions.pages_edit"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+        <label class="toggle-switch">
+          pages_delete
+          <input type="checkbox" [(ngModel)]="permissions.pages_delete"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+      </div>
+      <div class="col-md-3">
+        <label class="toggle-switch">
+          blog_add
+          <input type="checkbox" [(ngModel)]="permissions.blog_add"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+        <label class="toggle-switch">
+          blog_edit
+          <input type="checkbox" [(ngModel)]="permissions.blog_edit"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+        <label class="toggle-switch">
+          blog_delete
+          <input type="checkbox" [(ngModel)]="permissions.blog_delete"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+        <label class="toggle-switch">
+          usercomments_edit
+          <input type="checkbox" [(ngModel)]="permissions.usercomments_edit"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+        <label class="toggle-switch">
+          usercomments_delete
+          <input type="checkbox" [(ngModel)]="permissions.usercomments_delete"
+            (change)="banUser(user.username, user.ban)">
+          <div class="slider"></div>
+        </label>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" [disabled]="disableSetButton" (click)="save()">Save</button>
-    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
+  <button type="button" class="btn btn-outline-dark" (click)="save()">Save</button>
+  <button type="button" class="btn btn-outline-dark"
+    (click)="activeModal.close('Close click')">Close</button>
 </div>
