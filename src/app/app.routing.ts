@@ -13,6 +13,7 @@ import { SuperUsersComponent } from './components/super-users/super-users.compon
 import { PermissionsGuard } from './guards/permissions.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { CommentsComponent } from './components/comments/comments.component';
+import { ArticlesComponent } from './components/articles/articles.component';
 
 export const AppRoutes: Routes = [{
     path: '',
@@ -38,7 +39,11 @@ export const AppRoutes: Routes = [{
     {
       path: 'comments/:userName',
       component: CommentsComponent,
-    }
+    },
+    {
+      path: 'articles',
+      component: ArticlesComponent
+  },
   ],
 }, {
     path: 'pages',

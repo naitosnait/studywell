@@ -17,17 +17,17 @@
             </div>
           </div>
           <div class="card-body py-2 px-3">
-            <div *ngIf="!showEditor">
+            <div *ngIf="!showEditors[i]">
               {{item.content}}
             </div>
-            <textarea *ngIf="showEditor" rows="5"
+            <textarea *ngIf="showEditors[i]" rows="5"
               class="form-control description"
               [(ngModel)]="item.content"></textarea>
           </div>
           <div class="card-footer bg-light border-0 py-1 px-3"
-            *ngIf="!showEditor">
+            *ngIf="!showEditors[i]">
             <button
-              type="button" (click)="showEditor = true"
+              type="button" (click)="showEditors[i] = true"
               class="btn btn-link btn-sm text-decoration-none">
               Edit
             </button>
@@ -37,13 +37,13 @@
             </button>
           </div>
           <div class="card-footer bg-light border-0 py-1 px-3"
-            *ngIf="showEditor">
+            *ngIf="showEditors[i]">
             <button
               type="button" (click)="edit(i)"
               class="btn btn-link btn-sm text-decoration-none">
               Save
             </button>
-            <button type="button" (click)="showEditor = false"
+            <button type="button" (click)="showEditors[i] = false"
               class="btn btn-link btn-sm text-decoration-none">
               Cancel
             </button>

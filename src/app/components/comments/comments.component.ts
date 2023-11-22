@@ -16,7 +16,8 @@ export class CommentsComponent {
   public page = 1;
   public size = 10;
 
-  public showEditor = false;
+
+  public showEditors = [];
 
   constructor(private route: ActivatedRoute, private router: Router, private commentService: CommentsService) {
     this.route.params
@@ -27,12 +28,12 @@ export class CommentsComponent {
         }))
       .subscribe(res => {
         this.comments = res.comments;
-        console.log(res.comments)
+        res.comments.forEach(_ => this.showEditors.push(false));
       });
   }
 
   public edit(index: number) {
-    this.showEditor = false;
+    this.showEditors[index] = false;
     var comm = this.comments[index];
     var modifyComm = { content: comm.content, rating: comm.rating, username: comm.username } as ModifyComment;
     this.commentService.editComment(comm.comment_id, modifyComm).subscribe();
@@ -43,7 +44,7 @@ export class CommentsComponent {
     this.commentService.deleteComment(this.user, commentId).subscribe();
   }
 
-  public switchEditor(val: boolean) {
-    this.showEditor = val;
+  public switchEditor(index: number, val: boolean) {
+    this.showEditors[index] = val;
   }
 }

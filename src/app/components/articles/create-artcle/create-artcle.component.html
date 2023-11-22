@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <h4 class="modal-title">{{modifyType == createType ? "Create" : "Edit"}} Article</h4>
+  <button type="button" class="close" aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<form>
+  <div class="form-group">
+    <label for="exampleFormControlInput1">Title</label>
+    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Title*">
+  </div>
+  <div class="form-group">
+    <label for="exampleFormControlTextarea1">Example</label>
+    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+  </div>
+</form>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="save()">Save</button>
+  <button type="button" class="btn btn-outline-dark"
+    (click)="activeModal.close('Close click')">Close</button>
+</div>

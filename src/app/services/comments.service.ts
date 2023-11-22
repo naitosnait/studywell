@@ -14,7 +14,7 @@ export class CommentsService {
   }
 
   public editComment(commentId: string, comment: ModifyComment) {
-    var url = `/admin/comment/edit&comment_id=${commentId}`;
+    var url = `/admin/comment/edit?comment_id=${commentId}`;
     return this.restService.put<any>(url, comment);
   }
 

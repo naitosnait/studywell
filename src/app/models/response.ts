@@ -36,6 +36,10 @@ export interface UserResponse {
 export interface ArticleResponse {
   status: string
   article: ExistArticle[]
+  c_articles: number
+  page: number
+  size: number
+  pages: number
 }
 
 export interface ModeratorsListResponse {
@@ -55,3 +59,5 @@ export interface CommentResponse{
     size: number
     pages: number
 }
+
+
